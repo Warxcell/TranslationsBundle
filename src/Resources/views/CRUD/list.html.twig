@@ -1,0 +1,44 @@
+{% extends 'SonataAdminBundle:CRUD:base_list.html.twig' %}
+
+
+{% block list_table %}
+    <style>
+        .translation-table input {
+            width: 90%;
+        }
+    </style>
+
+    <div class="filter-form">
+        {{ form(filterForm) }}
+    </div>
+
+    {{ form_start(form) }}
+
+    <table class="table table-bordered table-striped translation-table">
+        <thead>
+            <tr>
+                <th>Token</th>
+                    {% for lang in languages %}
+                    <th>{{ lang.name }}</th>
+                    {% endfor %}
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for i,token in form.translations %}
+                <tr>
+                    <td>{{ tokens[i].token }}</td>
+{#                    <td>{{ form_row(form.tokens[i]) }}</td>#}
+                    {% for translation in token %}
+                        <td>{{ form_row(translation) }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block list_filters %} 
+{% endblock %}
