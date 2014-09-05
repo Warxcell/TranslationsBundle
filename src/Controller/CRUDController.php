@@ -15,13 +15,19 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController {
         $em = $this->getDoctrine()->getManager();
 
         $languages = $em->createQuery('SELECT lang FROM ObjectBGTranslationBundle:Language lang INDEX BY lang.id')->getResult();
+
         $qb = $em->createQueryBuilder()
-                ->select('token')
-                ->from('ObjectBGTranslationBundle:TranslationToken', 'token', 'token.id');
+                ->select('token', 'translation')
+                ->from('ObjectBGTranslationBundle:TranslationToken', 'token', 'token.id')
+                ->join('token.translations', 'translation')
+        ;
 
 
-        $FilterFormBuilder = $this->createFormBuilder()
+        $FilterFormBuilder = $this->createFormBuilder(null, array(
+                    'translation_domain' => 'ObjectBGTranslationBundle'
+                ))
                 ->setMethod('GET');
+
         $FilterFormBuilder->add('show-only-untranslated', 'checkbox', array(
             'required' => false,
             'label' => 'Show only untranslated'
