@@ -3,10 +3,13 @@
 namespace ObjectBG\TranslationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="ObjectBG\TranslationBundle\Repository\Language")
  * @ORM\Table(name="languages")
+ * @UniqueEntity(fields={"locale"}, message="This locale already exists")
+ * @UniqueEntity(fields={"name"}, message="This name already exists")
  */
 class Language {
 

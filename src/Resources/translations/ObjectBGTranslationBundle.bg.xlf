@@ -46,6 +46,14 @@
                 <source>Show only untranslated</source>
                 <target>Покажи непреведените</target>
             </trans-unit>
+            <trans-unit id="This locale already exists">
+                <source>This locale already exists</source>
+                <target>Този език вече съществува</target>
+            </trans-unit>
+            <trans-unit id="This name already exists">
+                <source>This name already exists</source>
+                <target>Този език вече съществува</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
