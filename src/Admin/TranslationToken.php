@@ -102,6 +102,19 @@ class TranslationToken extends Admin {
         $datagridMapper
                 ->add('token')
         ;
+		
+		$datagridMapper
+                ->add('show-only-untranslated', 'doctrine_orm_callback', array(
+                    'label' => 'Show only untranslated',
+                    'callback' => function ($queryBuilder, $alias, $field, $value) {
+                if ($value['value'] == null) {
+                    return;
+                }
+                $subQuery = 'SELECT COUNT(lang) FROM ObjectBGTranslationBundle:Language lang';
+                $queryBuilder->andWhere(sprintf('SIZE(%s.translations) < (%s)', $alias, $subQuery));
+            },
+                    'field_type' => 'checkbox'
+        ));
     }
 
     // Fields to be shown on lists
