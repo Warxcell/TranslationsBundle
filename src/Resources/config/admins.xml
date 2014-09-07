@@ -1,0 +1,60 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+
+    <parameters>
+        <parameter key="object_bg.translation.admin_class_translation">ObjectBG\TranslationBundle\Admin\Translations</parameter>
+        <parameter key="object_bg.translation.admin_class_token">ObjectBG\TranslationBundle\Admin\TranslationToken</parameter>
+        <parameter key="object_bg.translation.admin_class_language">ObjectBG\TranslationBundle\Admin\Language</parameter>
+        <parameter key="object_bg.translation.admin_group">Translations</parameter>
+    </parameters>
+
+    <services>
+        <service id="objectbg.admin.translations" class="%object_bg.translation.admin_class_translation%">
+            <tag name="sonata.admin" manager_type="orm" group="%object_bg.translation.admin_group%" label="Translations" />
+            <argument />
+            <argument>ObjectBG\TranslationBundle\Entity\Translation</argument>
+            <argument>ObjectBGTranslationBundle:CRUD</argument>
+            <call method="setTranslationDomain">
+                <argument>ObjectBGTranslationBundle</argument>
+            </call>
+        </service>
+        
+        <service id="objectbg.admin.translationToken" class="%object_bg.translation.admin_class_token%">
+            <tag name="sonata.admin" manager_type="orm" group="%object_bg.translation.admin_group%" label="Tokens" />
+            <argument/>
+            <argument>ObjectBG\TranslationBundle\Entity\TranslationToken</argument>
+            <argument />
+            <call method="setTranslationDomain">
+                <argument>ObjectBGTranslationBundle</argument>
+            </call>
+            <call method="setEntityManager">
+                <argument type="service" id="doctrine.orm.entity_manager" />
+            </call>
+        </service>
+        
+        <service id="objectbg.admin.language" class="%object_bg.translation.admin_class_language%">
+            <tag name="sonata.admin" manager_type="orm" group="%object_bg.translation.admin_group%" label="Language" />
+            <argument />
+            <argument>ObjectBG\TranslationBundle\Entity\Language</argument>
+            <argument />
+            <call method="setTranslationDomain">
+                <argument>ObjectBGTranslationBundle</argument>
+            </call>
+        </service>
+        
+        <service id="objectbg.admin.token_translation" class="ObjectBG\TranslationBundle\Admin\TokenTranslation">
+            <tag name="sonata.admin" manager_type="orm" group="%object_bg.translation.admin_group%" label="Token Translation" show_in_dashboard="false" />
+            <argument />
+            <argument>ObjectBG\TranslationBundle\Entity\Translation</argument>
+            <argument />
+            <call method="setTranslationDomain">
+                <argument>ObjectBGTranslationBundle</argument>
+            </call>
+        </service>
+    </services>
+ 
+</container>
