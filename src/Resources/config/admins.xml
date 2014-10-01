@@ -14,7 +14,7 @@
 
     <services>
         <service id="objectbg.admin.translations" class="%object_bg.translation.admin_class_translation%">
-            <tag name="sonata.admin" manager_type="orm" group="%object_bg.translation.admin_group%" label="Translations" />
+            <tag name="sonata.admin" manager_type="orm" group="%object_bg.translation.admin_group%" label="Translations" label_catalogue="ObjectBGTranslationBundle" />
             <argument />
             <argument>ObjectBG\TranslationBundle\Entity\Translation</argument>
             <argument>ObjectBGTranslationBundle:CRUD</argument>
@@ -24,7 +24,7 @@
         </service>
         
         <service id="objectbg.admin.translationToken" class="%object_bg.translation.admin_class_token%">
-            <tag name="sonata.admin" manager_type="orm" group="%object_bg.translation.admin_group%" label="Tokens" />
+            <tag name="sonata.admin" manager_type="orm" group="%object_bg.translation.admin_group%" label="Tokens" label_catalogue="ObjectBGTranslationBundle" />
             <argument/>
             <argument>ObjectBG\TranslationBundle\Entity\TranslationToken</argument>
             <argument />
@@ -37,7 +37,7 @@
         </service>
         
         <service id="objectbg.admin.language" class="%object_bg.translation.admin_class_language%">
-            <tag name="sonata.admin" manager_type="orm" group="%object_bg.translation.admin_group%" label="Language" />
+            <tag name="sonata.admin" manager_type="orm" group="%object_bg.translation.admin_group%" label="Language" label_catalogue="ObjectBGTranslationBundle" />
             <argument />
             <argument>ObjectBG\TranslationBundle\Entity\Language</argument>
             <argument />
@@ -47,7 +47,7 @@
         </service>
         
         <service id="objectbg.admin.token_translation" class="ObjectBG\TranslationBundle\Admin\TokenTranslation">
-            <tag name="sonata.admin" manager_type="orm" group="%object_bg.translation.admin_group%" label="Token Translation" show_in_dashboard="false" />
+            <tag name="sonata.admin" manager_type="orm" group="%object_bg.translation.admin_group%" label="Token Translation" label_catalogue="ObjectBGTranslationBundle" show_in_dashboard="false" />
             <argument />
             <argument>ObjectBG\TranslationBundle\Entity\Translation</argument>
             <argument />
