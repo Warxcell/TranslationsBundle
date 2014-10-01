@@ -1,0 +1,37 @@
+{% block object_bg_translations_widget %}
+    {{ form_errors(form) }}
+    
+    {% if form|length > 1 %}
+    <div class="a2lix_translations tabbable">
+        <ul class="a2lix_translationsLocales nav nav-tabs">
+        {% for translationsFields in form %}
+            {% set locale = translationsFields.vars.name %}
+            {% set label = translationsFields.vars.label %}
+
+            <li {% if app.request.locale == locale %}class="active"{% endif %}>
+                <a href="#" data-toggle="tab" data-target=".a2lix_translationsFields-{{ locale }}">
+                    {{ label|capitalize }}
+ {#                   {% if form.vars.default_locale == locale %}[Default]{% endif %}#}
+                    {% if translationsFields.vars.required %}*{% endif %}
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+        <div class="a2lix_translationsFields tab-content">
+        {% for translationsFields in form %}
+            {% set locale = translationsFields.vars.name %}
+
+            <div class="a2lix_translationsFields-{{ locale }} tab-pane {% if app.request.locale == locale %}active{% endif %}">
+                {{ form_errors(translationsFields) }}
+                {{ form_widget(translationsFields) }}
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block object_bg_translations_forms_widget %}
+    {{ block('object_bg_translations_widget') }}
+{% endblock %}
