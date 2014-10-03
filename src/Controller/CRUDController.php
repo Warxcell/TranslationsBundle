@@ -8,10 +8,11 @@ use Symfony\Component\Form\FormEvent;
 class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController {
 
     public function listAction() {
-        if (false === $this->admin->isGranted('LIST')) {
+        $CanEdit = $this->admin->isGranted('EDIT');
+        $CanView = $this->admin->isGranted('LIST');
+        if (false === $CanView && false === $CanEdit) {
             throw new AccessDeniedException();
         }
-        $CanEdit = $this->admin->isGranted('EDIT');
 
         $Request = $this->getRequest();
         $em = $this->getDoctrine()->getManager();
