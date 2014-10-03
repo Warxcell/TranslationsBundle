@@ -8,9 +8,11 @@ use Symfony\Component\Form\FormEvent;
 class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController {
 
     public function listAction() {
-        if (false === $this->admin->isGranted('EDIT')) {
+        if (false === $this->admin->isGranted('LIST')) {
             throw new AccessDeniedException();
         }
+        $CanEdit = $this->admin->isGranted('EDIT');
+
         $Request = $this->getRequest();
         $em = $this->getDoctrine()->getManager();
 
@@ -61,6 +63,7 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController {
 
         $FormBuilder->add('translations', 'collection', array(
             'type' => 'collection',
+            'disabled' => !$CanEdit,
             'label' => false,
             'allow_add' => true,
             'options' => array(
@@ -91,11 +94,13 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController {
             $event->setData($data);
         });
 
-        $FormBuilder->add('Save', 'submit', array(
-            'attr' => array(
-                'class' => 'btn btn-primary'
-            )
-        ));
+        if ($CanEdit) {
+            $FormBuilder->add('Save', 'submit', array(
+                'attr' => array(
+                    'class' => 'btn btn-primary'
+                )
+            ));
+        }
 
         $Form = $FormBuilder->getForm();
         $Form->handleRequest($Request);
