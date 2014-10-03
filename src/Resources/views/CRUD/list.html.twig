@@ -1,12 +1,27 @@
 {% extends 'SonataAdminBundle:CRUD:base_list.html.twig' %}
 
 
-{% block list_table %}
+{% block stylesheets %}
+    {{ parent() }}
     <style>
         .translation-table input {
             width: 90%;
         }
+
+        .filter-form form #form > * {
+            float: left;
+            margin-right: 20px;
+        }
+        .filter-form .checkbox {
+            display: inline;
+        }
+        .filter-form {
+            margin-bottom: 40px;
+        }
     </style>
+{% endblock %}
+
+{% block list_table %}
 
     <div class="filter-form">
         {{ form(filterForm) }}
@@ -28,7 +43,7 @@
             {% for i,token in form.translations %}
                 <tr>
                     <td>{{ tokens[i].token }}</td>
-{#                    <td>{{ form_row(form.tokens[i]) }}</td>#}
+                    {#                    <td>{{ form_row(form.tokens[i]) }}</td>#}
                     {% for translation in token %}
                         <td>{{ form_row(translation) }}</td>
                     {% endfor %}
