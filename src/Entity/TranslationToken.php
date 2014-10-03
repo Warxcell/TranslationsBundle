@@ -23,7 +23,7 @@ class TranslationToken {
     private $token;
 
     /**
-     * @ORM\OneToMany(targetEntity="Translation", mappedBy="translationToken", cascade={"PERSIST"})
+     * @ORM\OneToMany(targetEntity="Translation", mappedBy="translationToken", cascade={"PERSIST", "REMOVE"})
      */
     protected $translations;
 
