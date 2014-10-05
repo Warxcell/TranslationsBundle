@@ -4,10 +4,6 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
-        .translation-table input {
-            width: 90%;
-        }
-
         .filter-form form #form > * {
             float: left;
             margin-right: 20px;
@@ -27,32 +23,35 @@
         {{ form(filterForm) }}
     </div>
 
-    {{ form_start(form) }}
+    <div class="sonata-ba-form">
 
-    <table class="table table-bordered table-striped translation-table">
-        <thead>
-            <tr>
-                <th>Token</th>
-                    {% for lang in languages %}
-                    <th>{{ lang.name }}</th>
-                    {% endfor %}
-            </tr>
-        </thead>
+        {{ form_start(form) }}
 
-        <tbody>
-            {% for i,token in form.translations %}
+        <table class="table table-bordered table-striped translation-table">
+            <thead>
                 <tr>
-                    <td>{{ tokens[i].token }}</td>
-                    {#                    <td>{{ form_row(form.tokens[i]) }}</td>#}
-                    {% for translation in token %}
-                        <td>{{ form_row(translation) }}</td>
-                    {% endfor %}
+                    <th>Token</th>
+                        {% for lang in languages %}
+                        <th>{{ lang.name }}</th>
+                        {% endfor %}
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
 
-    {{ form_end(form) }}
+            <tbody>
+                {% for i,token in form.translations %}
+                    <tr>
+                        <td>{{ tokens[i].token }}</td>
+                        {#                    <td>{{ form_row(form.tokens[i]) }}</td>#}
+                        {% for translation in token %}
+                            <td>{{ form_row(translation) }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+            
+        {{ form_end(form) }}
+    </div>
 {% endblock %}
 
 {% block list_filters %} 
