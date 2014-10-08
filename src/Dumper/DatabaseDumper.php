@@ -22,13 +22,14 @@ class DatabaseDumper implements DumperInterface {
     public function dump(MessageCatalogue $messages, $options = array()) {
         $domains = $messages->all();
 
-        $allTokens = $this->em
-                ->createQuery('SELECT token FROM ObjectBGTranslationBundle:TranslationToken token INDEX BY token.token')
-                ->getResult();
+        $dql = 'SELECT COUNT(token) FROM ObjectBGTranslationBundle:TranslationToken token WHERE token.token = :token';
 
         foreach ($domains as $domain) {
             foreach ($domain as $token => $val) {
-                if (!isset($allTokens[$token])) {
+                $exists = ((int) $this->em->createQuery($dql)
+                                ->setParameter('token', $token)
+                                ->getSingleScalarResult()) > 0;
+                if (!$exists) {
                     $TokenEntity = new \ObjectBG\TranslationBundle\Entity\TranslationToken();
                     $TokenEntity->setToken($token);
                     $this->em->persist($TokenEntity);
