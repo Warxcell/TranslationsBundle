@@ -22,9 +22,8 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController {
         $qb = $em->createQueryBuilder()
                 ->select('token', 'translation')
                 ->from('ObjectBGTranslationBundle:TranslationToken', 'token', 'token.id')
-                ->join('token.translations', 'translation')
+                ->leftJoin('token.translations', 'translation')
         ;
-
 
         $FilterFormBuilder = $this->createFormBuilder(null, array(
                     'translation_domain' => 'ObjectBGTranslationBundle'

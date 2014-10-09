@@ -30,7 +30,7 @@
         <table class="table table-bordered table-striped translation-table">
             <thead>
                 <tr>
-                    <th>Token</th>
+                    <th>{% trans from "ObjectBGTranslationBundle" %}Token{% endtag %}</th>
                         {% for lang in languages %}
                         <th>{{ lang.name }}</th>
                         {% endfor %}
@@ -49,7 +49,31 @@
                 {% endfor %}
             </tbody>
         </table>
-            
+
+        {% if admin.hasRoute('export') and admin.isGranted("EXPORT") and admin.getExportFormats()|length %}
+            <div class="pull-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <i class="glyphicon glyphicon-export"></i>
+                        {{ "label_export_download"|trans({}, "SonataAdminBundle") }}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for format in admin.getExportFormats() %}
+                            <li>
+                                <a href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(admin.datagrid, 0) + {'format' : format}) }}">
+                                    <i class="glyphicon glyphicon-download"></i>
+                                    {{ format|upper }}
+                                </a>
+                            <li>
+                            {% endfor %}
+                    </ul>
+                </div>
+
+                &nbsp;-&nbsp;
+            </div>
+        {% endif %}
+        
         {{ form_end(form) }}
     </div>
 {% endblock %}
