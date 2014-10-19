@@ -102,17 +102,17 @@ class TranslationToken extends Admin {
         $datagridMapper
                 ->add('token')
         ;
-		
-		$datagridMapper
+
+        $datagridMapper
                 ->add('show-only-untranslated', 'doctrine_orm_callback', array(
                     'label' => 'Show only untranslated',
                     'callback' => function ($queryBuilder, $alias, $field, $value) {
-                if ($value['value'] == null) {
-                    return;
-                }
-                $subQuery = 'SELECT COUNT(lang) FROM ObjectBGTranslationBundle:Language lang';
-                $queryBuilder->andWhere(sprintf('SIZE(%s.translations) < (%s)', $alias, $subQuery));
-            },
+                        if ($value['value'] == null) {
+                            return;
+                        }
+                        $subQuery = 'SELECT COUNT(lang) FROM ObjectBGTranslationBundle:Language lang';
+                        $queryBuilder->andWhere(sprintf('SIZE(%s.translations) < (%s)', $alias, $subQuery));
+                    },
                     'field_type' => 'checkbox'
         ));
     }
@@ -122,7 +122,12 @@ class TranslationToken extends Admin {
         $listMapper
                 ->addIdentifier('id')
                 ->addIdentifier('token')
-
+                ->add('_action', 'actions', array(
+                    'actions' => array(
+                        'edit' => array(),
+                        'delete' => array(),
+                    )
+                ))
         ;
     }
 

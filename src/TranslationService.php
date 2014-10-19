@@ -8,7 +8,8 @@ use Symfony\Component\Form\FormRegistry,
     Doctrine\Common\Annotations\Reader,
     Symfony\Component\DependencyInjection\Container,
     ObjectBG\TranslationBundle\Entity\Language,
-    Symfony\Component\Translation\Translator;
+    Symfony\Component\Translation\Translator,
+    Symfony\Component\HttpFoundation\Request;
 
 class TranslationService {
 
@@ -45,6 +46,12 @@ class TranslationService {
     private $Translator;
 
     /**
+     *
+     * @var Request
+     */
+    private $Request;
+
+    /**
      * 
      * @param \Symfony\Component\DependencyInjection\Container $Container
      * @param \Symfony\Component\Form\FormRegistry $formRegistry
@@ -57,6 +64,7 @@ class TranslationService {
         $this->managerRegistry = $Container->get('doctrine');
         $this->AnnotationReader = $Container->get('annotation_reader');
         $this->Translator = $Container->get('translator');
+        $this->Request = $Container->get('request');
     }
 
     public function getLanguages() {
@@ -70,7 +78,9 @@ class TranslationService {
     }
 
     public function getCurrentLanguage() {
-        $CurrentLocale = $this->Translator->getLocale();
+        $CurrentLocale = $this->Request->get('_locale');
+//        $CurrentLocale = $this->Request->getLocale();
+//        $CurrentLocale = $this->Translator->getLocale();
         return $this->getLanguages()->filter(function(Language $Lang) use ($CurrentLocale) {
                     return $Lang->getLocale() == $CurrentLocale;
                 })->first();
@@ -118,8 +128,9 @@ class TranslationService {
     protected function getTranslationFields($translationClass, array $exclude = array()) {
         $fields = array();
         $translationClass = ClassUtils::getRealClass($translationClass);
+        $manager = $this->managerRegistry->getManagerForClass($translationClass);
 
-        if ($manager = $this->managerRegistry->getManagerForClass($translationClass)) {
+        if ($manager) {
             $metadataClass = $manager->getMetadataFactory()->getMetadataFor($translationClass);
 
             foreach ($metadataClass->reflFields as $Field => $Reflection) {

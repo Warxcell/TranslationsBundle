@@ -48,13 +48,16 @@ class TranslationsListener implements EventSubscriberInterface {
             $event->setData($newData);
         }
 
-        $translatableClass = $form->getParent()->getConfig()->getDataClass();
-        $translationClass = $this->TranslationService->getTranslationClass($translatableClass);
+        $translationClass = $form->getConfig()->getOption('translation_class');
+        if ($translationClass === null) {
+            $translatableClass = $form->getParent()->getConfig()->getDataClass();
+            $translationClass = $this->TranslationService->getTranslationClass($translatableClass);
+        }
 
         $formOptions = $form->getConfig()->getOptions();
 
         $fieldsOptions = $this->TranslationService->getFieldsOptions($translationClass, $formOptions);
-     
+
         foreach ($formOptions['locales'] as $locale => $name) {
             if (isset($fieldsOptions[$locale])) {
                 $form->add($locale, 'object_bg_translation_fields', array(
@@ -75,11 +78,10 @@ class TranslationsListener implements EventSubscriberInterface {
         $data = $event->getData();
 
         $Translatable = $event->getForm()->getParent()->getData();
-
         foreach ($data as $locale => $translation) {
             // Remove useless Translation object
             if (!$translation) {
-                $data->removeElement($translation);
+                $Translatable->getTranslations()->removeElement($translation);
             } else {
                 $LanguageField = $this->TranslationService->getLanguageField(get_class($translation));
                 $TranslatableField = $this->TranslationService->getTranslatableField(get_class($translation));

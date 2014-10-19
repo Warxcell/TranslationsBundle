@@ -25,6 +25,7 @@ class CurrentTranslationLoader implements EventSubscriber {
 
     public function __construct(Container $Container) {
         $this->Container = $Container;
+        $this->PropertyAccess = PropertyAccess::createPropertyAccessor();
     }
 
     public function getSubscribedEvents() {
@@ -35,9 +36,6 @@ class CurrentTranslationLoader implements EventSubscriber {
         $Entity = $Event->getEntity();
         if (!$Entity instanceof TranslatableInterface) {
             return;
-        }
-        if (!$this->PropertyAccess) {
-            $this->PropertyAccess = PropertyAccess::createPropertyAccessor();
         }
 
         /* @var $TranslationService TranslationService */
