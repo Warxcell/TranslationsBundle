@@ -78,9 +78,13 @@ class TranslationService {
     }
 
     public function getCurrentLanguage() {
-        $CurrentLocale = $this->Request->get('_locale');
-//        $CurrentLocale = $this->Request->getLocale();
-//        $CurrentLocale = $this->Translator->getLocale();
+		$CurrentLocale = $this->Request->get('_locale');
+        if (!$CurrentLocale) {
+            $CurrentLocale = $this->Request->getLocale();
+        }
+        if (!$CurrentLocale) {
+            $CurrentLocale = $this->Translator->getLocale();
+        }
         return $this->getLanguages()->filter(function(Language $Lang) use ($CurrentLocale) {
                     return $Lang->getLocale() == $CurrentLocale;
                 })->first();
