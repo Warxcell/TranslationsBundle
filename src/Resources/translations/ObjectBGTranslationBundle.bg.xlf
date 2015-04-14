@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="Translations">
+                <source>Translations</source>
+                <target>Преводи</target>
+            </trans-unit>
+            <trans-unit id="Tokens">
+                <source>Tokens</source>
+                <target>Tokens</target>
+            </trans-unit>
+            <trans-unit id="Token">
+                <source>Token</source>
+                <target>Token</target>
+            </trans-unit>
+            <trans-unit id="Translation Token List">
+                <source>Translation Token List</source>
+                <target>Списък tokens</target>
+            </trans-unit>
+            <trans-unit id="Language List">
+                <source>Language List</source>
+                <target>Езици</target>
+            </trans-unit>
+            <trans-unit id="Language">
+                <source>Language</source>
+                <target>Езици</target>
+            </trans-unit>
+            <trans-unit id="Name">
+                <source>Name</source>
+                <target>Име</target>
+            </trans-unit>
+            <trans-unit id="Locale">
+                <source>Locale</source>
+                <target>Код</target>
+            </trans-unit>
+            <trans-unit id="Save">
+                <source>Save</source>
+                <target>Запиши</target>
+            </trans-unit>
+            <trans-unit id="Filter">
+                <source>Filter</source>
+                <target>Филтрирай</target>
+            </trans-unit>
+            <trans-unit id="Show only untranslated">
+                <source>Show only untranslated</source>
+                <target>Покажи непреведените</target>
+            </trans-unit>
+            <trans-unit id="This locale already exists">
+                <source>This locale already exists</source>
+                <target>Този език вече съществува</target>
+            </trans-unit>
+            <trans-unit id="This name already exists">
+                <source>This name already exists</source>
+                <target>Този език вече съществува</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
