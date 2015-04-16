@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormEvent;
 
 class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController {
 
-    public function listAction() {
+    public function listAction(\Symfony\Component\HttpFoundation\Request $request = NULL) {
         $CanEdit = $this->admin->isGranted('EDIT');
         $CanView = $this->admin->isGranted('LIST');
         if (false === $CanView && false === $CanEdit) {
