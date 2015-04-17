@@ -37,7 +37,7 @@ class TranslationService {
      *
      * @var <Language>
      */
-    private $Languages = array();
+    private $Languages;
 
     /**
      *
@@ -68,7 +68,7 @@ class TranslationService {
     }
 
     public function getLanguages() {
-        if (isset($this->Languages)) {
+        if (isset($this->Languages) == false) {
             $LanguageClass = 'ObjectBG\TranslationBundle\Entity\Language';
             $manager = $this->managerRegistry->getManagerForClass($LanguageClass);
             $this->Languages = $manager->getRepository($LanguageClass)->findAll();
