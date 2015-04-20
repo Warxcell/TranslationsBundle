@@ -1,0 +1,82 @@
+{% extends 'SonataAdminBundle:CRUD:base_list.html.twig' %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .filter-form form #form > * {
+            float: left;
+            margin-right: 20px;
+        }
+        .filter-form .checkbox {
+            display: inline;
+        }
+        .filter-form {
+            margin-bottom: 40px;
+        }
+    </style>
+{% endblock %}
+
+{% block list_table %}
+
+    <div class="filter-form">
+        {{ form(filterForm) }}
+    </div>
+
+    <div class="sonata-ba-form">
+
+        {{ form_start(form) }}
+
+        <table class="table table-bordered table-striped translation-table">
+            <thead>
+                <tr>
+                    <th>{% trans from "ObjectBGTranslationBundle" %}Token{% endtrans %}</th>
+                        {% for lang in languages %}
+                        <th>{{ lang.name }}</th>
+                        {% endfor %}
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for i,token in form.translations %}
+                    <tr>
+                        <td>{{ tokens[i].token }}</td>
+                        {#                    <td>{{ form_row(form.tokens[i]) }}</td>#}
+                        {% for translation in token %}
+                            <td>{{ form_row(translation) }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if admin.hasRoute('export') and admin.isGranted("EXPORT") and admin.getExportFormats()|length %}
+            <div class="pull-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <i class="glyphicon glyphicon-export"></i>
+                        {{ "label_export_download"|trans({}, "SonataAdminBundle") }}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for format in admin.getExportFormats() %}
+                            <li>
+                                <a href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(admin.datagrid, 0) + {'format' : format}) }}">
+                                    <i class="glyphicon glyphicon-download"></i>
+                                    {{ format|upper }}
+                                </a>
+                            <li>
+                            {% endfor %}
+                    </ul>
+                </div>
+
+                &nbsp;-&nbsp;
+            </div>
+        {% endif %}
+        
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block list_filters %} 
+{% endblock %}
