@@ -9,7 +9,8 @@ use Symfony\Component\Form\FormEvent,
     Symfony\Component\PropertyAccess\PropertyAccess,
     Symfony\Component\PropertyAccess\PropertyAccessor;
 
-class TranslationsListener implements EventSubscriberInterface {
+class TranslationsListener implements EventSubscriberInterface
+{
 
     /**
      *
@@ -27,16 +28,18 @@ class TranslationsListener implements EventSubscriberInterface {
      * 
      * @param TranslationService $TranslationService
      */
-    public function __construct(TranslationService $TranslationService) {
+    public function __construct(TranslationService $TranslationService)
+    {
         $this->TranslationService = $TranslationService;
-        $this->PropertyAccess = PropertyAccess::createPropertyAccessor();
+        $this->PropertyAccess     = PropertyAccess::createPropertyAccessor();
     }
 
     /**
      *
      * @param \Symfony\Component\Form\FormEvent $event
      */
-    public function preSetData(FormEvent $event) {
+    public function preSetData(FormEvent $event)
+    {
         $form = $event->getForm();
 
         $data = $event->getData();
@@ -51,7 +54,7 @@ class TranslationsListener implements EventSubscriberInterface {
         $translationClass = $form->getConfig()->getOption('translation_class');
         if ($translationClass === null) {
             $translatableClass = $form->getParent()->getConfig()->getDataClass();
-            $translationClass = $this->TranslationService->getTranslationClass($translatableClass);
+            $translationClass  = $this->TranslationService->getTranslationClass($translatableClass);
         }
 
         $formOptions = $form->getConfig()->getOptions();
@@ -61,10 +64,10 @@ class TranslationsListener implements EventSubscriberInterface {
         foreach ($formOptions['locales'] as $locale => $name) {
             if (isset($fieldsOptions[$locale])) {
                 $form->add($locale, 'object_bg_translation_fields', array(
-                    'label' => $name,
+                    'label'      => $name,
                     'data_class' => $translationClass,
-                    'fields' => $fieldsOptions[$locale],
-                    'required' => in_array($locale, $formOptions['required_locales'])
+                    'fields'     => $fieldsOptions[$locale],
+                    'required'   => in_array($locale, $formOptions['required_locales'])
                 ));
             }
         }
@@ -74,29 +77,34 @@ class TranslationsListener implements EventSubscriberInterface {
      *
      * @param \Symfony\Component\Form\FormEvent $event
      */
-    public function submit(FormEvent $event) {
+    public function submit(FormEvent $event)
+    {
         $data = $event->getData();
 
         $Translatable = $event->getForm()->getParent()->getData();
+        $newData      = array();
         foreach ($data as $locale => $translation) {
             // Remove useless Translation object
             if (!$translation) {
                 $Translatable->getTranslations()->removeElement($translation);
             } else {
-                $LanguageField = $this->TranslationService->getLanguageField(get_class($translation));
+                $LanguageField     = $this->TranslationService->getLanguageField(get_class($translation));
                 $TranslatableField = $this->TranslationService->getTranslatableField(get_class($translation));
 
-                $Language = $this->TranslationService->getLanguageByLocale($locale);
+                $Language  = $this->TranslationService->getLanguageByLocale($locale);
                 $this->PropertyAccess->setValue($translation, $LanguageField, $Language);
                 $this->PropertyAccess->setValue($translation, $TranslatableField, $Translatable);
+                $newData[] = $translation;
             }
         }
+        $event->setData($newData);
     }
 
-    public static function getSubscribedEvents() {
+    public static function getSubscribedEvents()
+    {
         return array(
             FormEvents::PRE_SET_DATA => 'preSetData',
-            FormEvents::SUBMIT => 'submit',
+            FormEvents::SUBMIT       => 'submit',
         );
     }
 
