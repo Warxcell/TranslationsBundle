@@ -2,33 +2,55 @@
 
 namespace ObjectBG\TranslationBundle;
 
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\HttpKernel\Kernel;
+
 class Helper {
 
-	private $Kernel;
+    /**
+     *
+     * @var Kernel
+     */
+    private $Kernel;
 
-	public function __construct(\Symfony\Component\DependencyInjection\Container $Container) {
-		$this->Kernel = $Container->get('kernel');
-	}
+    /**
+     *
+     * @var Filesystem
+     */
+    private $FileSystem;
 
-	public function clearTranslationCache() {
-		$dirPath = $this->Kernel->getRootDir() . '/cache/' . $this->Kernel->getEnvironment() . '/translations/';
-		if (!is_dir($dirPath)) {
-			throw new \InvalidArgumentException("$dirPath must be a directory");
-		}
-		if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
-			$dirPath .= '/';
-		}
-		$files = glob($dirPath . '*', GLOB_MARK);
-		foreach ($files as $file) {
-			unlink($file);
-		}
-		rmdir($dirPath);
-	}
+    public function __construct(\Symfony\Component\DependencyInjection\Container $Container) {
+        $this->Kernel = $Container->get('kernel');
+        $this->FileSystem = new Filesystem;
+    }
 
-	public function addLanguageFile($locale) {
-		/**
-		 * @todo
-		 */
-	}
+    public function clearTranslationCache() {
+        $dirPath = $this->Kernel->getCacheDir() . '/translations/';
+        $this->FileSystem->remove($dirPath);
+    }
+
+    private function getLanguageFile($locale, $domain = 'messages') {
+        $file = $this->Kernel->getRootDir() . '/Resources/translations/' . $domain . '.' . $locale . '.db';
+        return $file;
+    }
+
+    public function addLanguageFile($locale, $domain = 'messages') {
+        $file = $this->getLanguageFile($locale, $domain);
+        $dir = dirname($file);
+        if (!$this->FileSystem->exists($dir)) {
+            $this->FileSystem->mkdir($dir);
+        }
+        $this->FileSystem->touch($file);
+
+        $this->clearTranslationCache();
+    }
+
+    public function removeLanguageFile($locale, $domain = 'messages') {
+        $file = $this->getLanguageFile($locale, $domain);
+        $this->FileSystem->remove($file);
+        
+        $this->clearTranslationCache();
+    }
 
 }

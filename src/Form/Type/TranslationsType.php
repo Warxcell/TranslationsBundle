@@ -58,6 +58,7 @@ class TranslationsType extends AbstractType {
             'locales' => $this->TranslationService->getLocales(),
             'default_locale' => $this->TranslationService->getDefaultLocale(),
             'required_locales' => $this->TranslationService->getRequiredLocales(),
+            'translation_class' => null,
             'fields' => array(),
             'exclude_fields' => array(),
         ));
