@@ -49,7 +49,22 @@ class CurrentTranslationLoader implements EventSubscriber
     {
         $TranslationService = $this->Container->get('object_bg.translation.service.translation');
         $CurrentLanguage    = $TranslationService->getCurrentLanguage();
-        $this->initializeTranslation($Entity, $CurrentLanguage);
+        $success            = $this->initializeTranslation($Entity, $CurrentLanguage);
+        if ($success == false) {
+            $this->initializeFallbackTranslation($Entity);
+        }
+    }
+
+    private function initializeFallbackTranslation($Entity)
+    {
+        $TranslationService = $this->Container->get('object_bg.translation.service.translation');
+        $fallbacks          = $TranslationService->getFallbackLocales();
+
+        foreach ($fallbacks as $fallback) {
+            if ($this->initializeTranslation($Entity, $fallback)) {
+                break;
+            }
+        }
     }
 
     public function initializeTranslation($Entity, $Language)
@@ -61,8 +76,9 @@ class CurrentTranslationLoader implements EventSubscriber
         $TranslationService = $this->Container->get('object_bg.translation.service.translation');
 
         $Translations = $this->PropertyAccess->getValue($Entity, $TranslationService->getTranslationsField($Entity));
+
         if (!$Translations) {
-            return;
+            return false;
         }
         $PropertyAccess = $this->PropertyAccess;
 
@@ -71,10 +87,12 @@ class CurrentTranslationLoader implements EventSubscriber
                     return $Language instanceof \ObjectBG\TranslationBundle\Entity\Language ? ($TranslationLanguage == $Language) : ($TranslationLanguage->getLocale() == $Language);
                 })->first();
 
-        if ($CurrentTranslation) {
-            $CurrentTranslationField = $TranslationService->getCurrentTranslationField($Entity);
-            $this->PropertyAccess->setValue($Entity, $CurrentTranslationField, $CurrentTranslation);
+        if (!$CurrentTranslation) {
+            return false;
         }
+        $CurrentTranslationField = $TranslationService->getCurrentTranslationField($Entity);
+        $this->PropertyAccess->setValue($Entity, $CurrentTranslationField, $CurrentTranslation);
+        return true;
     }
 
 }

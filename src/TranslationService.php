@@ -117,6 +117,11 @@ class TranslationService
                 })->first();
     }
 
+    public function getFallbackLocales()
+    {
+        return $this->Translator->getFallbackLocales();
+    }
+
     public function getLocales()
     {
         $locales = array();
