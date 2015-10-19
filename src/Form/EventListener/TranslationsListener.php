@@ -91,6 +91,7 @@ class TranslationsListener implements EventSubscriberInterface {
                 $this->PropertyAccess->setValue($translation, $TranslatableField, $Translatable);
             }
         }
+		$event->setData($data);
     }
 
     public static function getSubscribedEvents() {
