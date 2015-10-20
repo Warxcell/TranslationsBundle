@@ -82,6 +82,7 @@ class TranslationsListener implements EventSubscriberInterface {
             // Remove useless Translation object
             if (!$translation) {
                 $Translatable->getTranslations()->removeElement($translation);
+				unset($data[$locale]);
             } else {
                 $LanguageField = $this->TranslationService->getLanguageField(get_class($translation));
                 $TranslatableField = $this->TranslationService->getTranslatableField(get_class($translation));
