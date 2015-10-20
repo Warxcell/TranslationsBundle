@@ -75,24 +75,25 @@ class TranslationsListener implements EventSubscriberInterface {
      * @param \Symfony\Component\Form\FormEvent $event
      */
     public function submit(FormEvent $event) {
-        $data = $event->getData();
+		$data = $event->getData();
 
         $Translatable = $event->getForm()->getParent()->getData();
+        $newData      = array();
         foreach ($data as $locale => $translation) {
             // Remove useless Translation object
             if (!$translation) {
                 $Translatable->getTranslations()->removeElement($translation);
-				unset($data[$locale]);
             } else {
-                $LanguageField = $this->TranslationService->getLanguageField(get_class($translation));
+                $LanguageField     = $this->TranslationService->getLanguageField(get_class($translation));
                 $TranslatableField = $this->TranslationService->getTranslatableField(get_class($translation));
 
-                $Language = $this->TranslationService->getLanguageByLocale($locale);
+                $Language  = $this->TranslationService->getLanguageByLocale($locale);
                 $this->PropertyAccess->setValue($translation, $LanguageField, $Language);
                 $this->PropertyAccess->setValue($translation, $TranslatableField, $Translatable);
+                $newData[] = $translation;
             }
         }
-		$event->setData($data);
+        $event->setData($newData);
     }
 
     public static function getSubscribedEvents() {
