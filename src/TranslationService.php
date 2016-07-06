@@ -7,7 +7,7 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\DependencyInjection\Container;
 use ObjectBG\TranslationBundle\Entity\Language;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -43,7 +43,7 @@ class TranslationService
 
     /**
      *
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
