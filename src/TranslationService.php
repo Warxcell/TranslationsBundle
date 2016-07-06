@@ -33,7 +33,7 @@ class TranslationService
      *
      * @var Container
      */
-    private $Container;
+    private $container;
 
     /**
      *
@@ -183,14 +183,14 @@ class TranslationService
         return $fields;
     }
 
-    protected function getFieldByAnnotation($Class, $Annotation)
+    protected function getFieldByAnnotation($class, $Annotation)
     {
-        if (is_object($Class)) {
-            $Class = get_class($Class);
+        if (is_object($class)) {
+            $class = get_class($class);
         }
 
-        $Class = ClassUtils::getRealClass($Class);
-        $ReflectionClass = new \ReflectionClass($Class);
+        $class = ClassUtils::getRealClass($class);
+        $ReflectionClass = new \ReflectionClass($class);
 
         foreach ($ReflectionClass->getProperties() as $ReflectionProperty) {
             $Found = $this->annotationReader->getPropertyAnnotation($ReflectionProperty, $Annotation);
@@ -199,27 +199,27 @@ class TranslationService
             }
         }
 
-        throw Exception\InvalidArgumentException::missingRequiredAnnotation($Class, $Annotation);
+        throw Exception\InvalidArgumentException::missingRequiredAnnotation($class, $Annotation);
     }
 
-    public function getLanguageField($TranslationClass)
+    public function getLanguageField($translationClass)
     {
-        return $this->getFieldByAnnotation($TranslationClass, 'ObjectBG\TranslationBundle\Annotation\Language');
+        return $this->getFieldByAnnotation($translationClass, 'ObjectBG\TranslationBundle\Annotation\Language');
     }
 
-    public function getTranslatableField($TranslationClass)
+    public function getTranslatableField($translationClass)
     {
-        return $this->getFieldByAnnotation($TranslationClass, 'ObjectBG\TranslationBundle\Annotation\Translatable');
+        return $this->getFieldByAnnotation($translationClass, 'ObjectBG\TranslationBundle\Annotation\Translatable');
     }
 
-    public function getTranslationsField($TranslatableClass)
+    public function getTranslationsField($translatableClass)
     {
-        return $this->getFieldByAnnotation($TranslatableClass, 'ObjectBG\TranslationBundle\Annotation\Translations');
+        return $this->getFieldByAnnotation($translatableClass, 'ObjectBG\TranslationBundle\Annotation\Translations');
     }
 
-    public function getCurrentTranslationField($TranslatableClass)
+    public function getCurrentTranslationField($translatableClass)
     {
-        return $this->getFieldByAnnotation($TranslatableClass, 'ObjectBG\TranslationBundle\Annotation\CurrentTranslation');
+        return $this->getFieldByAnnotation($translatableClass, 'ObjectBG\TranslationBundle\Annotation\CurrentTranslation');
     }
 
     public function getLanguageByLocale($locale)
