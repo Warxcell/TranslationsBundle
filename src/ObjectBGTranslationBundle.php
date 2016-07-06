@@ -12,6 +12,7 @@ class ObjectBGTranslationBundle extends Bundle {
      */
     public function build(ContainerBuilder $container) {
         $container->addCompilerPass(new DependencyInjection\Compiler\TemplatingCompilerPass);
+        $container->addCompilerPass(new DependencyInjection\Compiler\OverrideTranslatorCompilerPass());
     }
 
 }
