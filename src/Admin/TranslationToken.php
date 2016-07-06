@@ -9,6 +9,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Doctrine\ORM\EntityManager;
+use ObjectBG\TranslationBundle\Helper;
 
 class TranslationToken extends Admin {
 
@@ -31,6 +32,12 @@ class TranslationToken extends Admin {
      * @var \Doctrine\ORM\EntityManager
      */
     private $em;
+	
+	/**
+     *
+     * @var Helper
+     */
+    private $helper;
 
     /**
      * 
@@ -38,6 +45,14 @@ class TranslationToken extends Admin {
      */
     public function setEntityManager(EntityManager $em) {
         $this->em = $em;
+    }
+	
+	/**
+     * 
+     * @param Helper $helper
+     */
+	public function setHelper(Helper $helper) {
+        $this->helper = $helper;
     }
 
     // Fields to be shown on create/edit forms
@@ -130,5 +145,13 @@ class TranslationToken extends Admin {
                 ))
         ;
     }
+	
+	public function postPersist($object) {
+		$this->helper->clearTranslationCache();
+	}
+	
+	public function postUpdate($object) {
+		$this->helper->clearTranslationCache();
+	}
 
 }
