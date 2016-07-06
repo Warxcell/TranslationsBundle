@@ -2,13 +2,12 @@
 
 namespace ObjectBG\TranslationBundle;
 
-use Symfony\Component\Form\FormRegistry;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\DependencyInjection\Container;
 use ObjectBG\TranslationBundle\Entity\Language;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Translation\Translator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -28,7 +27,7 @@ class TranslationService
      *
      * @var Reader
      */
-    private $AnnotationReader;
+    private $annotationReader;
 
     /**
      *
@@ -38,27 +37,27 @@ class TranslationService
 
     /**
      *
-     * @var <Language>
+     * @var Language[]
      */
-    private $Languages;
+    private $languages;
 
     /**
      *
-     * @var TranslatorInterface
+     * @var Translator
      */
-    private $Translator;
+    private $translator;
 
     /**
      *
      * @var Request
      */
-    private $Request;
+    private $request;
 
     /**
      *
      * @var PropertyAccessor
      */
-    private $PropertyAccess;
+    private $propertyAccess;
 
     /**
      * 
@@ -69,21 +68,21 @@ class TranslationService
      */
     public function __construct(Container $Container)
     {
-        $this->Container = $Container;
+        $this->container = $Container;
         $this->typeGuesser = $Container->get('form.registry')->getTypeGuesser();
         $this->managerRegistry = $Container->get('doctrine');
-        $this->AnnotationReader = $Container->get('annotation_reader');
-        $this->Translator = $Container->get('translator');
-        $this->Request = $Container->get('request');
-        $this->PropertyAccess = PropertyAccess::createPropertyAccessor();
+        $this->annotationReader = $Container->get('annotation_reader');
+        $this->translator = $Container->get('translator');
+        $this->request = $Container->get('request');
+        $this->propertyAccess = PropertyAccess::createPropertyAccessor();
     }
 
     public function getTranslation($entity, $language)
     {
-        $Translations = $this->PropertyAccess->getValue($entity, $this->getTranslationsField($entity));
+        $Translations = $this->propertyAccess->getValue($entity, $this->getTranslationsField($entity));
 
         $translationService = $this;
-        $PropertyAccess = $this->PropertyAccess;
+        $PropertyAccess = $this->propertyAccess;
         $Translation = $Translations->filter(function($item) use ($translationService, $language, $PropertyAccess) {
                     $TranslationLanguage = $PropertyAccess->getValue($item, $translationService->getLanguageField($item));
                     return $language instanceof Language ? ($TranslationLanguage == $language) : ($TranslationLanguage->getLocale() == $language);
@@ -94,23 +93,23 @@ class TranslationService
 
     public function getLanguages()
     {
-        if (isset($this->Languages) == false) {
+        if (isset($this->languages) == false) {
             $LanguageClass = 'ObjectBG\TranslationBundle\Entity\Language';
             $manager = $this->managerRegistry->getManagerForClass($LanguageClass);
-            $this->Languages = $manager->getRepository($LanguageClass)->findAll();
-            $this->Languages = new \Doctrine\Common\Collections\ArrayCollection($this->Languages);
+            $this->languages = $manager->getRepository($LanguageClass)->findAll();
+            $this->languages = new \Doctrine\Common\Collections\ArrayCollection($this->languages);
         }
-        return $this->Languages;
+        return $this->languages;
     }
 
     public function getCurrentLanguage()
     {
-        $CurrentLocale = $this->Request->get('_locale');
+        $CurrentLocale = $this->request->get('_locale');
         if (!$CurrentLocale) {
-            $CurrentLocale = $this->Request->getLocale();
+            $CurrentLocale = $this->request->getLocale();
         }
         if (!$CurrentLocale) {
-            $CurrentLocale = $this->Translator->getLocale();
+            $CurrentLocale = $this->translator->getLocale();
         }
         return $this->getLanguages()->filter(function(Language $Lang) use ($CurrentLocale) {
                     return $Lang->getLocale() == $CurrentLocale;
@@ -119,7 +118,7 @@ class TranslationService
 
     public function getFallbackLocales()
     {
-        return $this->Translator->getFallbackLocales();
+        return $this->translator->getFallbackLocales();
     }
 
     public function getLocales()
@@ -133,7 +132,7 @@ class TranslationService
 
     public function getDefaultLocale()
     {
-        return $this->Container->getParameter('locale');
+        return $this->container->getParameter('locale');
     }
 
     public function getRequiredLocales()
@@ -142,21 +141,21 @@ class TranslationService
 //        return array($this->Container->getParameter('locale'));
     }
 
-    public function getTranslationClass($TranslatableClass)
+    public function getTranslationClass($translatableClass)
     {
-        $TranslatableClass = ClassUtils::getRealClass($TranslatableClass);
+        $translatableClass = ClassUtils::getRealClass($translatableClass);
 
-        if ($manager = $this->managerRegistry->getManagerForClass($TranslatableClass)) {
-            $metadataClass = $manager->getMetadataFactory()->getMetadataFor($TranslatableClass);
+        if ($manager = $this->managerRegistry->getManagerForClass($translatableClass)) {
+            $metadataClass = $manager->getMetadataFactory()->getMetadataFor($translatableClass);
             foreach ($metadataClass->reflFields as $Field => $Reflection) {
-                $Annotation = $this->AnnotationReader->getPropertyAnnotation($Reflection, 'ObjectBG\TranslationBundle\Annotation\Translations');
+                $Annotation = $this->annotationReader->getPropertyAnnotation($Reflection, 'ObjectBG\TranslationBundle\Annotation\Translations');
                 if ($Annotation) {
                     $AssocMapping = $metadataClass->associationMappings[$Field];
                     return $AssocMapping['targetEntity'];
                 }
             }
         }
-        throw Exception\InvalidArgumentException::missingTranslations($TranslatableClass);
+        throw Exception\InvalidArgumentException::missingTranslations($translatableClass);
     }
 
     /**
@@ -175,7 +174,7 @@ class TranslationService
             $metadataClass = $manager->getMetadataFactory()->getMetadataFor($translationClass);
 
             foreach ($metadataClass->reflFields as $Field => $Reflection) {
-                $Annotation = $this->AnnotationReader->getPropertyAnnotation($Reflection, 'ObjectBG\TranslationBundle\Annotation\Column');
+                $Annotation = $this->annotationReader->getPropertyAnnotation($Reflection, 'ObjectBG\TranslationBundle\Annotation\Column');
                 if ($Annotation) {
                     $fields[] = $Field;
                 }
@@ -194,7 +193,7 @@ class TranslationService
         $ReflectionClass = new \ReflectionClass($Class);
 
         foreach ($ReflectionClass->getProperties() as $ReflectionProperty) {
-            $Found = $this->AnnotationReader->getPropertyAnnotation($ReflectionProperty, $Annotation);
+            $Found = $this->annotationReader->getPropertyAnnotation($ReflectionProperty, $Annotation);
             if ($Found) {
                 return $ReflectionProperty->getName();
             }
