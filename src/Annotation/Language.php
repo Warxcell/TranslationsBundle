@@ -6,6 +6,7 @@ namespace ObjectBG\TranslationBundle\Annotation;
  * @Annotation
  * @Target("PROPERTY")
  */
-class Language {
+class Language
+{
     
 }

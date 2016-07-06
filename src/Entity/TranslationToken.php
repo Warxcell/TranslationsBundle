@@ -10,7 +10,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="translation_tokens")
  * @UniqueEntity(fields={"token"}, message="This token already exists")
  */
-class TranslationToken {
+class TranslationToken
+{
 
     /**
      * @ORM\Id 
@@ -27,41 +28,50 @@ class TranslationToken {
      */
     protected $translations;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
     }
 
-    public function getToken() {
+    public function getToken()
+    {
         return $this->token;
     }
 
-    public function setToken($token) {
+    public function setToken($token)
+    {
         $this->token = $token;
     }
 
-    public function getTranslations() {
+    public function getTranslations()
+    {
         return $this->translations;
     }
 
-    public function setTranslations($translations) {
+    public function setTranslations($translations)
+    {
         $this->translations = $translations;
     }
 
-    public function getTranslation(Language $Language) {
+    public function getTranslation(Language $Language)
+    {
         return $this->getTranslations()->filter(function($item) use ($Language) {
                     return $item->getLanguage() == $Language;
                 })->first();
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->token;
     }
 

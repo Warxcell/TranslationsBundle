@@ -8,7 +8,8 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 
-class Translations extends Admin {
+class Translations extends Admin
+{
 
     /**
      * The base route name used to generate the routing information
@@ -29,7 +30,8 @@ class Translations extends Admin {
     );
 
     // Fields to be shown on create/edit forms
-    protected function configureFormFields(FormMapper $formMapper) {
+    protected function configureFormFields(FormMapper $formMapper)
+    {
         $formMapper
                 ->add('catalogue', 'hidden', array('data' => 'messages'))
                 ->add('translationToken')
@@ -39,7 +41,8 @@ class Translations extends Admin {
     }
 
     // Fields to be shown on filter forms
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper) {
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    {
         $datagridMapper
                 ->add('catalogue')
                 ->add('translation')
@@ -49,7 +52,8 @@ class Translations extends Admin {
     }
 
     // Fields to be shown on lists
-    protected function configureListFields(ListMapper $listMapper) {
+    protected function configureListFields(ListMapper $listMapper)
+    {
         $listMapper
                 ->addIdentifier('id')
                 ->add('catalogue')
@@ -66,7 +70,8 @@ class Translations extends Admin {
         ;
     }
 
-    protected function configureRoutes(RouteCollection $collection) {
+    protected function configureRoutes(RouteCollection $collection)
+    {
         $collection->remove('create');
         $collection->remove('edit');
     }

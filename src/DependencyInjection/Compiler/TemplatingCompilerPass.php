@@ -5,12 +5,14 @@ namespace ObjectBG\TranslationBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface,
     Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class TemplatingCompilerPass implements CompilerPassInterface {
+class TemplatingCompilerPass implements CompilerPassInterface
+{
 
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container) {
+    public function process(ContainerBuilder $container)
+    {
         $resources = $container->getParameter('twig.form.resources');
 
         $template = 'ObjectBGTranslationBundle:Form:default.html.twig';

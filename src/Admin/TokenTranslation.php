@@ -8,7 +8,8 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 
-class TokenTranslation extends Admin {
+class TokenTranslation extends Admin
+{
 
     /**
      * The base route name used to generate the routing information
@@ -25,7 +26,8 @@ class TokenTranslation extends Admin {
     protected $baseRoutePattern = 'fake';
 
     // Fields to be shown on create/edit forms
-    protected function configureFormFields(FormMapper $formMapper) {
+    protected function configureFormFields(FormMapper $formMapper)
+    {
         $formMapper
                 ->add('language', null, array(
                     'disabled' => true

@@ -2,14 +2,14 @@
 
 namespace ObjectBG\TranslationBundle;
 
-use Symfony\Component\Form\FormRegistry,
-    Doctrine\Common\Persistence\ManagerRegistry,
-    Doctrine\Common\Util\ClassUtils,
-    Doctrine\Common\Annotations\Reader,
-    Symfony\Component\DependencyInjection\Container,
-    ObjectBG\TranslationBundle\Entity\Language,
-    Symfony\Component\Translation\Translator,
-    Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\FormRegistry;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Util\ClassUtils;
+use Doctrine\Common\Annotations\Reader;
+use Symfony\Component\DependencyInjection\Container;
+use ObjectBG\TranslationBundle\Entity\Language;
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -69,13 +69,13 @@ class TranslationService
      */
     public function __construct(Container $Container)
     {
-        $this->Container        = $Container;
-        $this->typeGuesser      = $Container->get('form.registry')->getTypeGuesser();
-        $this->managerRegistry  = $Container->get('doctrine');
+        $this->Container = $Container;
+        $this->typeGuesser = $Container->get('form.registry')->getTypeGuesser();
+        $this->managerRegistry = $Container->get('doctrine');
         $this->AnnotationReader = $Container->get('annotation_reader');
-        $this->Translator       = $Container->get('translator');
-        $this->Request          = $Container->get('request');
-        $this->PropertyAccess   = PropertyAccess::createPropertyAccessor();
+        $this->Translator = $Container->get('translator');
+        $this->Request = $Container->get('request');
+        $this->PropertyAccess = PropertyAccess::createPropertyAccessor();
     }
 
     public function getTranslation($entity, $language)
@@ -83,8 +83,8 @@ class TranslationService
         $Translations = $this->PropertyAccess->getValue($entity, $this->getTranslationsField($entity));
 
         $translationService = $this;
-        $PropertyAccess     = $this->PropertyAccess;
-        $Translation        = $Translations->filter(function($item) use ($translationService, $language, $PropertyAccess) {
+        $PropertyAccess = $this->PropertyAccess;
+        $Translation = $Translations->filter(function($item) use ($translationService, $language, $PropertyAccess) {
                     $TranslationLanguage = $PropertyAccess->getValue($item, $translationService->getLanguageField($item));
                     return $language instanceof Language ? ($TranslationLanguage == $language) : ($TranslationLanguage->getLocale() == $language);
                 })->first();
@@ -95,8 +95,8 @@ class TranslationService
     public function getLanguages()
     {
         if (isset($this->Languages) == false) {
-            $LanguageClass   = 'ObjectBG\TranslationBundle\Entity\Language';
-            $manager         = $this->managerRegistry->getManagerForClass($LanguageClass);
+            $LanguageClass = 'ObjectBG\TranslationBundle\Entity\Language';
+            $manager = $this->managerRegistry->getManagerForClass($LanguageClass);
             $this->Languages = $manager->getRepository($LanguageClass)->findAll();
             $this->Languages = new \Doctrine\Common\Collections\ArrayCollection($this->Languages);
         }
@@ -167,9 +167,9 @@ class TranslationService
      */
     protected function getTranslationFields($translationClass, array $exclude = array())
     {
-        $fields           = array();
+        $fields = array();
         $translationClass = ClassUtils::getRealClass($translationClass);
-        $manager          = $this->managerRegistry->getManagerForClass($translationClass);
+        $manager = $this->managerRegistry->getManagerForClass($translationClass);
 
         if ($manager) {
             $metadataClass = $manager->getMetadataFactory()->getMetadataFor($translationClass);
@@ -190,7 +190,7 @@ class TranslationService
             $Class = get_class($Class);
         }
 
-        $Class           = ClassUtils::getRealClass($Class);
+        $Class = ClassUtils::getRealClass($Class);
         $ReflectionClass = new \ReflectionClass($Class);
 
         foreach ($ReflectionClass->getProperties() as $ReflectionProperty) {

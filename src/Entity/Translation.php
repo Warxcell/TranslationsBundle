@@ -12,7 +12,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * )
  * @UniqueEntity(fields={"language", "translationToken", "catalogue"}, message="This translation already exists")
  */
-class Translation {
+class Translation
+{
 
     /**
      * @ORM\Id 
@@ -41,35 +42,43 @@ class Translation {
      */
     protected $translationToken;
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getCatalogue() {
+    public function getCatalogue()
+    {
         return $this->catalogue;
     }
 
-    public function getTranslation() {
+    public function getTranslation()
+    {
         return $this->translation;
     }
 
-    public function getLanguage() {
+    public function getLanguage()
+    {
         return $this->language;
     }
 
-    public function getTranslationToken() {
+    public function getTranslationToken()
+    {
         return $this->translationToken;
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
     }
 
-    public function setCatalogue($catalogue) {
+    public function setCatalogue($catalogue)
+    {
         $this->catalogue = $catalogue;
     }
 
-    public function setTranslation($translation) {
+    public function setTranslation($translation)
+    {
         $this->translation = $translation;
     }
 
@@ -77,7 +86,8 @@ class Translation {
      * 
      * @param \ObjectBG\TranslationBundle\Entity\Language $language
      */
-    public function setLanguage(Language $language) {
+    public function setLanguage(Language $language)
+    {
         $this->language = $language;
     }
 
@@ -85,11 +95,13 @@ class Translation {
      * 
      * @param \ObjectBG\TranslationBundle\Entity\TranslationToken $translationToken
      */
-    public function setTranslationToken(TranslationToken $translationToken) {
+    public function setTranslationToken(TranslationToken $translationToken)
+    {
         $this->translationToken = $translationToken;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return (string) $this->translation;
     }
 

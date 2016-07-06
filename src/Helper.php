@@ -6,7 +6,8 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
-class Helper {
+class Helper
+{
 
     /**
      *
@@ -20,22 +21,26 @@ class Helper {
      */
     private $FileSystem;
 
-    public function __construct(\Symfony\Component\DependencyInjection\Container $Container) {
+    public function __construct(\Symfony\Component\DependencyInjection\Container $Container)
+    {
         $this->Kernel = $Container->get('kernel');
         $this->FileSystem = new Filesystem;
     }
 
-    public function clearTranslationCache() {
+    public function clearTranslationCache()
+    {
 //        $dirPath = $this->Kernel->getCacheDir() . '/translations/';
 //        $this->FileSystem->remove($dirPath);
     }
 
-    private function getLanguageFile($locale, $domain = 'messages') {
+    private function getLanguageFile($locale, $domain = 'messages')
+    {
         $file = $this->Kernel->getRootDir() . '/Resources/translations/' . $domain . '.' . $locale . '.db';
         return $file;
     }
 
-    public function addLanguageFile($locale, $domain = 'messages') {
+    public function addLanguageFile($locale, $domain = 'messages')
+    {
 //        $file = $this->getLanguageFile($locale, $domain);
 //        $dir = dirname($file);
 //        if (!$this->FileSystem->exists($dir)) {
@@ -46,7 +51,8 @@ class Helper {
 //        $this->clearTranslationCache();
     }
 
-    public function removeLanguageFile($locale, $domain = 'messages') {
+    public function removeLanguageFile($locale, $domain = 'messages')
+    {
 //        $file = $this->getLanguageFile($locale, $domain);
 //        $this->FileSystem->remove($file);
 //        

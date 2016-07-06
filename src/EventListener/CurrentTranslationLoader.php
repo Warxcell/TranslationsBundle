@@ -27,7 +27,7 @@ class CurrentTranslationLoader implements EventSubscriber
 
     public function __construct(Container $Container)
     {
-        $this->Container      = $Container;
+        $this->Container = $Container;
         $this->PropertyAccess = PropertyAccess::createPropertyAccessor();
     }
 
@@ -54,8 +54,8 @@ class CurrentTranslationLoader implements EventSubscriber
     public function initializeCurrentTranslation($Entity)
     {
         $TranslationService = $this->Container->get('object_bg.translation.service.translation');
-        $CurrentLanguage    = $TranslationService->getCurrentLanguage();
-        $success            = $this->initializeTranslation($Entity, $CurrentLanguage);
+        $CurrentLanguage = $TranslationService->getCurrentLanguage();
+        $success = $this->initializeTranslation($Entity, $CurrentLanguage);
 
         if ($success == false && $this->Fallback === true) {
             $this->initializeFallbackTranslation($Entity);
@@ -65,7 +65,7 @@ class CurrentTranslationLoader implements EventSubscriber
     private function initializeFallbackTranslation($Entity)
     {
         $TranslationService = $this->Container->get('object_bg.translation.service.translation');
-        $fallbacks          = $TranslationService->getFallbackLocales();
+        $fallbacks = $TranslationService->getFallbackLocales();
 
         foreach ($fallbacks as $fallback) {
             if ($this->initializeTranslation($Entity, $fallback)) {

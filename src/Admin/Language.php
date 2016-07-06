@@ -8,11 +8,13 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\DependencyInjection\Container;
 
-class Language extends Admin {
+class Language extends Admin
+{
 
     private $Container;
 
-    public function setContainer(Container $Container) {
+    public function setContainer(Container $Container)
+    {
         $this->Container = $Container;
     }
 
@@ -31,7 +33,8 @@ class Language extends Admin {
     protected $baseRoutePattern = 'translation-bundle/languages';
 
     // Fields to be shown on create/edit forms
-    protected function configureFormFields(FormMapper $formMapper) {
+    protected function configureFormFields(FormMapper $formMapper)
+    {
         $formMapper
                 ->add('locale')
                 ->add('name')
@@ -39,7 +42,8 @@ class Language extends Admin {
     }
 
     // Fields to be shown on filter forms
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper) {
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    {
         $datagridMapper
                 ->add('locale')
                 ->add('name')
@@ -47,7 +51,8 @@ class Language extends Admin {
     }
 
     // Fields to be shown on lists
-    protected function configureListFields(ListMapper $listMapper) {
+    protected function configureListFields(ListMapper $listMapper)
+    {
         $listMapper
                 ->addIdentifier('locale')
                 ->addIdentifier('name')
@@ -60,19 +65,23 @@ class Language extends Admin {
         ;
     }
 
-    public function postPersist($object) {
+    public function postPersist($object)
+    {
         $this->Container->get('object_bg.translation.helper')->addLanguageFile($object->getLocale());
     }
 
-    public function postRemove($object) {
+    public function postRemove($object)
+    {
         $this->Container->get('object_bg.translation.helper')->removeLanguageFile($object->getLocale());
     }
 
-    public function preUpdate($object) {
+    public function preUpdate($object)
+    {
         $this->Container->get('object_bg.translation.helper')->removeLanguageFile($object->getLocale());
     }
 
-    public function postUpdate($object) {
+    public function postUpdate($object)
+    {
         $this->Container->get('object_bg.translation.helper')->addLanguageFile($object->getLocale());
     }
 

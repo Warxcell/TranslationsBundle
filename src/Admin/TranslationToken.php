@@ -11,7 +11,8 @@ use Symfony\Component\Form\FormEvent;
 use Doctrine\ORM\EntityManager;
 use ObjectBG\TranslationBundle\Helper;
 
-class TranslationToken extends Admin {
+class TranslationToken extends Admin
+{
 
     /**
      * The base route name used to generate the routing information
@@ -32,8 +33,8 @@ class TranslationToken extends Admin {
      * @var \Doctrine\ORM\EntityManager
      */
     private $em;
-	
-	/**
+
+    /**
      *
      * @var Helper
      */
@@ -43,20 +44,23 @@ class TranslationToken extends Admin {
      * 
      * @param \Doctrine\ORM\EntityManager $em
      */
-    public function setEntityManager(EntityManager $em) {
+    public function setEntityManager(EntityManager $em)
+    {
         $this->em = $em;
     }
-	
-	/**
+
+    /**
      * 
      * @param Helper $helper
      */
-	public function setHelper(Helper $helper) {
+    public function setHelper(Helper $helper)
+    {
         $this->helper = $helper;
     }
 
     // Fields to be shown on create/edit forms
-    protected function configureFormFields(FormMapper $formMapper) {
+    protected function configureFormFields(FormMapper $formMapper)
+    {
         $formMapper
                 ->add('token')
                 ->add('translations', 'sonata_type_collection', array(
@@ -113,7 +117,8 @@ class TranslationToken extends Admin {
     }
 
     // Fields to be shown on filter forms
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper) {
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    {
         $datagridMapper
                 ->add('token')
         ;
@@ -133,7 +138,8 @@ class TranslationToken extends Admin {
     }
 
     // Fields to be shown on lists
-    protected function configureListFields(ListMapper $listMapper) {
+    protected function configureListFields(ListMapper $listMapper)
+    {
         $listMapper
                 ->addIdentifier('id')
                 ->addIdentifier('token')
@@ -145,13 +151,15 @@ class TranslationToken extends Admin {
                 ))
         ;
     }
-	
-	public function postPersist($object) {
-		$this->helper->clearTranslationCache();
-	}
-	
-	public function postUpdate($object) {
-		$this->helper->clearTranslationCache();
-	}
+
+    public function postPersist($object)
+    {
+        $this->helper->clearTranslationCache();
+    }
+
+    public function postUpdate($object)
+    {
+        $this->helper->clearTranslationCache();
+    }
 
 }

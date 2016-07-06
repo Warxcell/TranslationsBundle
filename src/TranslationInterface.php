@@ -2,6 +2,7 @@
 
 namespace ObjectBG\TranslationBundle;
 
-interface TranslationInterface {
+interface TranslationInterface
+{
     
 }
