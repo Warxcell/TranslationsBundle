@@ -72,7 +72,7 @@ class TranslationService
         $this->typeGuesser = $Container->get('form.registry')->getTypeGuesser();
         $this->managerRegistry = $Container->get('doctrine');
         $this->annotationReader = $Container->get('annotation_reader');
-        $this->translator = $Container->get('translator');
+        $this->translator = $Container->get('translator.default');
         $this->request = $Container->get('request');
         $this->propertyAccess = PropertyAccess::createPropertyAccessor();
     }
@@ -84,9 +84,9 @@ class TranslationService
         $translationService = $this;
         $PropertyAccess = $this->propertyAccess;
         $Translation = $Translations->filter(function($item) use ($translationService, $language, $PropertyAccess) {
-                    $TranslationLanguage = $PropertyAccess->getValue($item, $translationService->getLanguageField($item));
-                    return $language instanceof Language ? ($TranslationLanguage == $language) : ($TranslationLanguage->getLocale() == $language);
-                })->first();
+                $TranslationLanguage = $PropertyAccess->getValue($item, $translationService->getLanguageField($item));
+                return $language instanceof Language ? ($TranslationLanguage == $language) : ($TranslationLanguage->getLocale() == $language);
+            })->first();
 
         return $Translation;
     }
@@ -112,8 +112,8 @@ class TranslationService
             $CurrentLocale = $this->translator->getLocale();
         }
         return $this->getLanguages()->filter(function(Language $Lang) use ($CurrentLocale) {
-                    return $Lang->getLocale() == $CurrentLocale;
-                })->first();
+                return $Lang->getLocale() == $CurrentLocale;
+            })->first();
     }
 
     public function getFallbackLocales()
@@ -225,8 +225,8 @@ class TranslationService
     public function getLanguageByLocale($locale)
     {
         return $this->getLanguages()->filter(function(Language $Lang) use ($locale) {
-                    return $Lang->getLocale() == $locale;
-                })->first();
+                return $Lang->getLocale() == $locale;
+            })->first();
     }
 
     /**
@@ -337,5 +337,4 @@ class TranslationService
 
         return $options;
     }
-
 }
