@@ -66,13 +66,12 @@ class TranslationToken
     public function getTranslation(Language $Language)
     {
         return $this->getTranslations()->filter(function($item) use ($Language) {
-                    return $item->getLanguage() == $Language;
-                })->first();
+                return $item->getLanguage() == $Language;
+            })->first();
     }
 
     public function __toString()
     {
         return $this->token;
     }
-
 }

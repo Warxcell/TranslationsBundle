@@ -9,7 +9,8 @@ use Symfony\Component\Form\FormEvent,
     Symfony\Component\PropertyAccess\PropertyAccess,
     Symfony\Component\PropertyAccess\PropertyAccessor;
 
-class TranslationsListener implements EventSubscriberInterface {
+class TranslationsListener implements EventSubscriberInterface
+{
 
     /**
      *
@@ -27,7 +28,8 @@ class TranslationsListener implements EventSubscriberInterface {
      * 
      * @param TranslationService $TranslationService
      */
-    public function __construct(TranslationService $TranslationService) {
+    public function __construct(TranslationService $TranslationService)
+    {
         $this->TranslationService = $TranslationService;
         $this->PropertyAccess = PropertyAccess::createPropertyAccessor();
     }
@@ -36,7 +38,8 @@ class TranslationsListener implements EventSubscriberInterface {
      *
      * @param \Symfony\Component\Form\FormEvent $event
      */
-    public function preSetData(FormEvent $event) {
+    public function preSetData(FormEvent $event)
+    {
         $form = $event->getForm();
 
         $data = $event->getData();
@@ -74,7 +77,8 @@ class TranslationsListener implements EventSubscriberInterface {
      *
      * @param \Symfony\Component\Form\FormEvent $event
      */
-    public function submit(FormEvent $event) {
+    public function submit(FormEvent $event)
+    {
         $data = $event->getData();
 
         $Translatable = $event->getForm()->getParent()->getData();
@@ -91,14 +95,14 @@ class TranslationsListener implements EventSubscriberInterface {
                 $this->PropertyAccess->setValue($translation, $TranslatableField, $Translatable);
             }
         }
-		$event->setData($data);
+        $event->setData($data);
     }
 
-    public static function getSubscribedEvents() {
+    public static function getSubscribedEvents()
+    {
         return array(
             FormEvents::PRE_SET_DATA => 'preSetData',
             FormEvents::SUBMIT => 'submit',
         );
     }
-
 }

@@ -5,7 +5,8 @@ namespace ObjectBG\TranslationBundle\Form\Type;
 use Symfony\Component\Form\AbstractType,
     Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class TranslationsLocalesSelectorType extends AbstractType {
+class TranslationsLocalesSelectorType extends AbstractType
+{
 
     private $locales;
     private $defaultLocale;
@@ -15,8 +16,9 @@ class TranslationsLocalesSelectorType extends AbstractType {
      * @param array $locales
      * @param string $defaultLocale
      */
-    public function __construct() {
-        
+    public function __construct()
+    {
+
 //    public function __construct(array $locales, $defaultLocale) {
 //        $this->locales = $locales;
 //        $this->defaultLocale = $defaultLocale;
@@ -26,7 +28,8 @@ class TranslationsLocalesSelectorType extends AbstractType {
      * 
      * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver->setDefaults(array(
             'choices' => array_combine($this->locales, $this->locales),
             'expanded' => true,
@@ -37,12 +40,13 @@ class TranslationsLocalesSelectorType extends AbstractType {
         ));
     }
 
-    public function getParent() {
+    public function getParent()
+    {
         return 'choice';
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'object_bg_locales_selector';
     }
-
 }

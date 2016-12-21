@@ -21,5 +21,4 @@ class TemplatingCompilerPass implements CompilerPassInterface
             $container->setParameter('twig.form.resources', $resources);
         }
     }
-
 }

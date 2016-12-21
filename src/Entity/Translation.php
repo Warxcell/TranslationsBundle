@@ -104,5 +104,4 @@ class Translation
     {
         return (string) $this->translation;
     }
-
 }

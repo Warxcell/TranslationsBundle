@@ -61,5 +61,4 @@ class Language
     {
         return $this->name;
     }
-
 }

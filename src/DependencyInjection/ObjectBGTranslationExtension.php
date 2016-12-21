@@ -27,5 +27,4 @@ class ObjectBGTranslationExtension extends Extension
         $loader->load('services.xml');
         $loader->load('admins.xml');
     }
-
 }

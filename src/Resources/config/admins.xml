@@ -34,9 +34,6 @@
             <call method="setEntityManager">
                 <argument type="service" id="doctrine.orm.entity_manager" />
             </call>
-			<call method="setHelper">
-                <argument type="service" id="object_bg.translation.helper" />
-            </call>
         </service>
         
         <service id="objectbg.admin.language" class="%object_bg.translation.admin_class_language%">

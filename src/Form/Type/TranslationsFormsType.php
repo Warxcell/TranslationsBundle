@@ -14,7 +14,8 @@ use Symfony\Component\Form\FormView,
  *
  * @author David ALLIX
  */
-class TranslationsFormsType extends AbstractType {
+class TranslationsFormsType extends AbstractType
+{
 
     private $translationForm;
     private $translationsListener;
@@ -30,7 +31,8 @@ class TranslationsFormsType extends AbstractType {
      * @param string $defaultLocale
      * @param array $requiredLocales
      */
-    public function __construct(TranslationForm $translationForm, TranslationsFormsListener $translationsListener, array $locales, $defaultLocale, array $requiredLocales = array()) {
+    public function __construct(TranslationForm $translationForm, TranslationsFormsListener $translationsListener, array $locales, $defaultLocale, array $requiredLocales = array())
+    {
         $this->translationForm = $translationForm;
         $this->translationsListener = $translationsListener;
         $this->locales = $locales;
@@ -43,7 +45,8 @@ class TranslationsFormsType extends AbstractType {
      * @param \Symfony\Component\Form\FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder->addEventSubscriber($this->translationsListener);
 
         $formsOptions = $this->translationForm->getFormsOptions($options);
@@ -61,7 +64,8 @@ class TranslationsFormsType extends AbstractType {
      * @param \Symfony\Component\Form\FormInterface $form
      * @param array $options
      */
-    public function buildView(FormView $view, FormInterface $form, array $options) {
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
         $view->vars['default_locale'] = $this->defaultLocale;
         $view->vars['required_locales'] = $options['required_locales'];
     }
@@ -70,7 +74,8 @@ class TranslationsFormsType extends AbstractType {
      * 
      * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver->setDefaults(array(
             'by_reference' => false,
             'locales' => $this->locales,
@@ -80,8 +85,8 @@ class TranslationsFormsType extends AbstractType {
         ));
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'object_bg_translations_forms';
     }
-
 }

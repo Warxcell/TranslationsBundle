@@ -33,10 +33,10 @@ class Translations extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-                ->add('catalogue', 'hidden', array('data' => 'messages'))
-                ->add('translationToken')
-                ->add('language')
-                ->add('translation')
+            ->add('catalogue', 'hidden', array('data' => 'messages'))
+            ->add('translationToken')
+            ->add('language')
+            ->add('translation')
         ;
     }
 
@@ -44,10 +44,10 @@ class Translations extends Admin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-                ->add('catalogue')
-                ->add('translation')
-                ->add('language')
-                ->add('translationToken')
+            ->add('catalogue')
+            ->add('translation')
+            ->add('language')
+            ->add('translationToken')
         ;
     }
 
@@ -55,18 +55,18 @@ class Translations extends Admin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-                ->addIdentifier('id')
-                ->add('catalogue')
-                ->add('translation', null, array(
-                    'edit' => 'inline'
-                ))
-                ->add('language')
-                ->add('translationToken')
-                ->add('_action', 'actions', array(
-                    'actions' => array(
-                        'edit' => array(),
-                    )
-                ))
+            ->addIdentifier('id')
+            ->add('catalogue')
+            ->add('translation', null, array(
+                'edit' => 'inline'
+            ))
+            ->add('language')
+            ->add('translationToken')
+            ->add('_action', 'actions', array(
+                'actions' => array(
+                    'edit' => array(),
+                )
+            ))
         ;
     }
 
@@ -75,5 +75,4 @@ class Translations extends Admin
         $collection->remove('create');
         $collection->remove('edit');
     }
-
 }

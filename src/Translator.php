@@ -37,5 +37,4 @@ class Translator extends OriginalTranslator
 
         $this->catalogues[$locale]->addCatalogue($catalogue);
     }
-
 }

@@ -10,7 +10,8 @@ use Symfony\Component\Form\FormView,
     ObjectBG\TranslationBundle\Form\EventListener\TranslationsListener,
     ObjectBG\TranslationBundle\TranslationService;
 
-class TranslationsType extends AbstractType {
+class TranslationsType extends AbstractType
+{
 
     private $translationsListener;
     private $TranslationService;
@@ -22,7 +23,8 @@ class TranslationsType extends AbstractType {
      * @param string $defaultLocale
      * @param array $requiredLocales
      */
-    public function __construct(TranslationsListener $translationsListener, TranslationService $TranslationService) {
+    public function __construct(TranslationsListener $translationsListener, TranslationService $TranslationService)
+    {
         $this->translationsListener = $translationsListener;
         $this->TranslationService = $TranslationService;
     }
@@ -32,7 +34,8 @@ class TranslationsType extends AbstractType {
      * @param \Symfony\Component\Form\FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder->addEventSubscriber($this->translationsListener);
     }
 
@@ -42,7 +45,8 @@ class TranslationsType extends AbstractType {
      * @param \Symfony\Component\Form\FormInterface $form
      * @param array $options
      */
-    public function buildView(FormView $view, FormInterface $form, array $options) {
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
         $view->vars['default_locale'] = $options['default_locale'];
         $view->vars['required_locales'] = $options['required_locales'];
     }
@@ -51,7 +55,8 @@ class TranslationsType extends AbstractType {
      *
      * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver->setDefaults(array(
             'by_reference' => false,
             'empty_data' => new \Doctrine\Common\Collections\ArrayCollection(),
@@ -64,8 +69,8 @@ class TranslationsType extends AbstractType {
         ));
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'object_bg_translations';
     }
-
 }

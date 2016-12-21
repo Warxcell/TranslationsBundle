@@ -30,8 +30,8 @@ class DatabaseDumper implements DumperInterface
         foreach ($domains as $domain) {
             foreach ($domain as $token => $val) {
                 $exists = ((int) $this->em->createQuery($dql)
-                                ->setParameter('token', $token)
-                                ->getSingleScalarResult()) > 0;
+                        ->setParameter('token', $token)
+                        ->getSingleScalarResult()) > 0;
                 if (!$exists) {
                     $TokenEntity = new \ObjectBG\TranslationBundle\Entity\TranslationToken();
                     $TokenEntity->setToken($token);
@@ -41,5 +41,4 @@ class DatabaseDumper implements DumperInterface
         }
         $this->em->flush();
     }
-
 }

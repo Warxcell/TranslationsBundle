@@ -36,8 +36,8 @@ class Language extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-                ->add('locale')
-                ->add('name')
+            ->add('locale')
+            ->add('name')
         ;
     }
 
@@ -45,8 +45,8 @@ class Language extends Admin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-                ->add('locale')
-                ->add('name')
+            ->add('locale')
+            ->add('name')
         ;
     }
 
@@ -54,35 +54,14 @@ class Language extends Admin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-                ->addIdentifier('locale')
-                ->addIdentifier('name')
-                ->add('_action', 'actions', array(
-                    'actions' => array(
-                        'edit' => array(),
-                        'delete' => array(),
-                    )
-                ))
+            ->addIdentifier('locale')
+            ->addIdentifier('name')
+            ->add('_action', 'actions', array(
+                'actions' => array(
+                    'edit' => array(),
+                    'delete' => array(),
+                )
+            ))
         ;
     }
-
-    public function postPersist($object)
-    {
-        $this->Container->get('object_bg.translation.helper')->addLanguageFile($object->getLocale());
-    }
-
-    public function postRemove($object)
-    {
-        $this->Container->get('object_bg.translation.helper')->removeLanguageFile($object->getLocale());
-    }
-
-    public function preUpdate($object)
-    {
-        $this->Container->get('object_bg.translation.helper')->removeLanguageFile($object->getLocale());
-    }
-
-    public function postUpdate($object)
-    {
-        $this->Container->get('object_bg.translation.helper')->addLanguageFile($object->getLocale());
-    }
-
 }

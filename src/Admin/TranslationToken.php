@@ -9,7 +9,6 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Doctrine\ORM\EntityManager;
-use ObjectBG\TranslationBundle\Helper;
 
 class TranslationToken extends Admin
 {
@@ -35,12 +34,6 @@ class TranslationToken extends Admin
     private $em;
 
     /**
-     *
-     * @var Helper
-     */
-    private $helper;
-
-    /**
      * 
      * @param \Doctrine\ORM\EntityManager $em
      */
@@ -49,38 +42,29 @@ class TranslationToken extends Admin
         $this->em = $em;
     }
 
-    /**
-     * 
-     * @param Helper $helper
-     */
-    public function setHelper(Helper $helper)
-    {
-        $this->helper = $helper;
-    }
-
     // Fields to be shown on create/edit forms
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-                ->add('token')
-                ->add('translations', 'sonata_type_collection', array(
-                    'type_options' => array(
-                        'delete' => false,
-                        'required' => false,
-                    ),
-                    'btn_add' => false
-                        ), array(
-                    'edit' => 'inline',
-                    'inline' => 'table',
-                    'admin_code' => 'objectbg.admin.token_translation'
-                ))
+            ->add('token')
+            ->add('translations', 'sonata_type_collection', array(
+                'type_options' => array(
+                    'delete' => false,
+                    'required' => false,
+                ),
+                'btn_add' => false
+                ), array(
+                'edit' => 'inline',
+                'inline' => 'table',
+                'admin_code' => 'objectbg.admin.token_translation'
+            ))
         ;
 
         $languages = $this->em->getRepository('ObjectBGTranslationBundle:Language')->findAll();
         $languages = new \Doctrine\Common\Collections\ArrayCollection($languages);
 
         $formMapper->getFormBuilder()->addEventListener(
-                FormEvents::PRE_SET_DATA, function(FormEvent $Event) use ($languages) {
+            FormEvents::PRE_SET_DATA, function(FormEvent $Event) use ($languages) {
             $data = $Event->getData();
             if ($data) {
                 $translations = $data->getTranslations();
@@ -103,7 +87,7 @@ class TranslationToken extends Admin
 
         $subject = $this->getSubject();
         $formMapper->getFormBuilder()->addEventListener(
-                FormEvents::POST_SUBMIT, function(FormEvent $Event) use ($subject) {
+            FormEvents::POST_SUBMIT, function(FormEvent $Event) use ($subject) {
             $data = $Event->getData();
             foreach ($data->getTranslations() as $translation) {
                 if ($translation->getTranslation() == null) {
@@ -120,20 +104,20 @@ class TranslationToken extends Admin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-                ->add('token')
+            ->add('token')
         ;
 
         $datagridMapper
-                ->add('show-only-untranslated', 'doctrine_orm_callback', array(
-                    'label' => 'Show only untranslated',
-                    'callback' => function ($queryBuilder, $alias, $field, $value) {
-                        if ($value['value'] == null) {
-                            return;
-                        }
-                        $subQuery = 'SELECT COUNT(lang) FROM ObjectBGTranslationBundle:Language lang';
-                        $queryBuilder->andWhere(sprintf('SIZE(%s.translations) < (%s)', $alias, $subQuery));
-                    },
-                    'field_type' => 'checkbox'
+            ->add('show-only-untranslated', 'doctrine_orm_callback', array(
+                'label' => 'Show only untranslated',
+                'callback' => function ($queryBuilder, $alias, $field, $value) {
+                    if ($value['value'] == null) {
+                        return;
+                    }
+                    $subQuery = 'SELECT COUNT(lang) FROM ObjectBGTranslationBundle:Language lang';
+                    $queryBuilder->andWhere(sprintf('SIZE(%s.translations) < (%s)', $alias, $subQuery));
+                },
+                'field_type' => 'checkbox'
         ));
     }
 
@@ -141,25 +125,14 @@ class TranslationToken extends Admin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-                ->addIdentifier('id')
-                ->addIdentifier('token')
-                ->add('_action', 'actions', array(
-                    'actions' => array(
-                        'edit' => array(),
-                        'delete' => array(),
-                    )
-                ))
+            ->addIdentifier('id')
+            ->addIdentifier('token')
+            ->add('_action', 'actions', array(
+                'actions' => array(
+                    'edit' => array(),
+                    'delete' => array(),
+                )
+            ))
         ;
     }
-
-    public function postPersist($object)
-    {
-        $this->helper->clearTranslationCache();
-    }
-
-    public function postUpdate($object)
-    {
-        $this->helper->clearTranslationCache();
-    }
-
 }

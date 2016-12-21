@@ -12,11 +12,13 @@ use Symfony\Component\Form\AbstractType,
  *
  * @author David ALLIX
  */
-class TranslatedEntityType extends AbstractType {
+class TranslatedEntityType extends AbstractType
+{
 
     private $request;
 
-    public function setRequest(Request $request = null) {
+    public function setRequest(Request $request = null)
+    {
         $this->request = $request;
     }
 
@@ -24,26 +26,28 @@ class TranslatedEntityType extends AbstractType {
      * 
      * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver->setDefaults(array(
             'translation_path' => 'translations',
             'translation_property' => null,
             'property' => function(Options $options) {
-        if (null === $this->request) {
-            throw new \Exception('Error while getting request');
-        }
+                if (null === $this->request) {
+                    throw new \Exception('Error while getting request');
+                }
 
-        return $options['translation_path'] . '[' . $this->request->getLocale() . '].' . $options['translation_property'];
-    },
+                return $options['translation_path'] . '[' . $this->request->getLocale() . '].' . $options['translation_property'];
+            },
         ));
     }
 
-    public function getParent() {
+    public function getParent()
+    {
         return 'entity';
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'object_bg_translated_entity';
     }
-
 }

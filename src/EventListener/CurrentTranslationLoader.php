@@ -4,7 +4,6 @@ namespace ObjectBG\TranslationBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
 use ObjectBG\TranslationBundle\TranslatableInterface;
-use ObjectBG\TranslationBundle\TranslationService;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -90,9 +89,9 @@ class CurrentTranslationLoader implements EventSubscriber
         $PropertyAccess = $this->PropertyAccess;
 
         $CurrentTranslation = $Translations->filter(function($item) use ($TranslationService, $Language, $PropertyAccess) {
-                    $TranslationLanguage = $PropertyAccess->getValue($item, $TranslationService->getLanguageField($item));
-                    return $Language instanceof \ObjectBG\TranslationBundle\Entity\Language ? ($TranslationLanguage == $Language) : ($TranslationLanguage->getLocale() == $Language);
-                })->first();
+                $TranslationLanguage = $PropertyAccess->getValue($item, $TranslationService->getLanguageField($item));
+                return $Language instanceof \ObjectBG\TranslationBundle\Entity\Language ? ($TranslationLanguage == $Language) : ($TranslationLanguage->getLocale() == $Language);
+            })->first();
 
         if (!$CurrentTranslation) {
             return false;
@@ -101,5 +100,4 @@ class CurrentTranslationLoader implements EventSubscriber
         $this->PropertyAccess->setValue($Entity, $CurrentTranslationField, $CurrentTranslation);
         return true;
     }
-
 }

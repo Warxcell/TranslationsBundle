@@ -29,11 +29,10 @@ class TokenTranslation extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-                ->add('language', null, array(
-                    'disabled' => true
-                ))
-                ->add('translation')
+            ->add('language', null, array(
+                'disabled' => true
+            ))
+            ->add('translation')
         ;
     }
-
 }

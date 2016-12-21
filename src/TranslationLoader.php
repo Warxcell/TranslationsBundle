@@ -35,5 +35,4 @@ class TranslationLoader implements LoaderInterface
 
         return $catalogue;
     }
-
 }

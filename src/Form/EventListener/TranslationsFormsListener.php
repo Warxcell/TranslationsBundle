@@ -10,7 +10,8 @@ use Symfony\Component\Form\FormEvent,
  * @author David ALLIX
  */
 class TranslationsFormsListener implements EventSubscriberInterface
-{    
+{
+
     /**
      *
      * @param \Symfony\Component\Form\FormEvent $event
@@ -23,17 +24,16 @@ class TranslationsFormsListener implements EventSubscriberInterface
             // Remove useless Translation object
             if (!$translation) {
                 $data->removeElement($translation);
-                
             } else {
                 $translation->setLocale($locale);
             }
         }
     }
-    
+
     public static function getSubscribedEvents()
     {
         return array(
             FormEvents::SUBMIT => 'submit',
         );
-    }    
+    }
 }
