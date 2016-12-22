@@ -1,14 +1,14 @@
 {% block object_bg_translations_widget %}
     {{ form_errors(form) }}
 
-    {% if form|length > 1 %}
-        <div class="a2lix_translations tabbable">
+    <div class="a2lix_translations tabbable">
+        {% if form|length > 1 %}
             <ul class="a2lix_translationsLocales nav nav-tabs">
                 {% for translationsFields in form %}
                     {% set locale = translationsFields.vars.name %}
                     {% set label = translationsFields.vars.label %}
 
-                    <li {% if app.request.locale == locale %}class="active"{% endif %}>
+                    <li {% if loop.first %}class="active"{% endif %}>
                         <a href="#" data-toggle="tab" data-target=".a2lix_translationsFields-{{ locale }}">
                             {{ label|capitalize }}
                             {#                   {% if form.vars.default_locale == locale %}[Default]{% endif %}#}
@@ -23,7 +23,7 @@
             {% for translationsFields in form %}
                 {% set locale = translationsFields.vars.name %}
 
-                <div class="a2lix_translationsFields-{{ locale }} tab-pane {% if app.request.locale == locale %}active{% endif %}">
+                <div class="a2lix_translationsFields-{{ locale }} tab-pane {% if loop.first %}active{% endif %}">
                     {{ form_errors(translationsFields) }}
                     {{ form_widget(translationsFields) }}
                 </div>
