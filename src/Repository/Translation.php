@@ -22,4 +22,13 @@ class Translation extends EntityRepository
         $r = $query->getResult();
         return $r;
     }
+
+    public function getTranslationsByLocale($locale, $catalogue = "messages")
+    {
+        $query = $this->getEntityManager()->createQuery("SELECT t,token,language FROM ObjectBGTranslationBundle:Translation t JOIN t.translationToken token JOIN t.language language WHERE language.locale = :locale AND t.catalogue = :catalogue");
+        $query->setParameter("locale", $locale);
+        $query->setParameter("catalogue", $catalogue);
+        $r = $query->getResult();
+        return $r;
+    }
 }

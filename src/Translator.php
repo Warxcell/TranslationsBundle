@@ -19,22 +19,35 @@ class Translator extends OriginalTranslator
         $em = $this->container->get('doctrine.orm.entity_manager');
         /* @var $translationRepository \ObjectBG\TranslationBundle\Repository\Translation  */
         $translationRepository = $em->getRepository("ObjectBGTranslationBundle:Translation");
-        /* @var $languageRepository \ObjectBG\TranslationBundle\Repository\Language  */
-        $languageRepository = $em->getRepository("ObjectBGTranslationBundle:Language");
-
-        $language = $languageRepository->findOneByLocale($locale);
-
 
         $domain = 'messages';
-
         $catalogue = new MessageCatalogue($locale);
-        if ($language) {
-            $translations = $translationRepository->getTranslations($language, $domain);
-            foreach ($translations as $translation) {
-                $catalogue->set($translation->getTranslationToken()->getToken(), $translation->getTranslation(), $domain);
-            }
+
+        $translations = $translationRepository->getTranslationsByLocale($locale, $domain);
+        foreach ($translations as $translation) {
+            $catalogue->set($translation->getTranslationToken()->getToken(), $translation->getTranslation(), $domain);
         }
 
         $this->catalogues[$locale]->addCatalogue($catalogue);
+
+        $this->loadFallbackCatalogues($locale);
+    }
+
+    private function loadFallbackCatalogues($locale)
+    {
+        $current = $this->catalogues[$locale];
+
+        foreach ($this->computeFallbackLocales($locale) as $fallback) {
+            if (!isset($this->catalogues[$fallback])) {
+                $this->loadCatalogue($fallback);
+            }
+
+            $fallbackCatalogue = new MessageCatalogue($fallback, $this->catalogues[$fallback]->all());
+            foreach ($this->catalogues[$fallback]->getResources() as $resource) {
+                $fallbackCatalogue->addResource($resource);
+            }
+            $current->addFallbackCatalogue($fallbackCatalogue);
+            $current = $fallbackCatalogue;
+        }
     }
 }
