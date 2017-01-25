@@ -33,9 +33,10 @@ class DatabaseDumper implements DumperInterface
                         ->setParameter('token', $token)
                         ->getSingleScalarResult()) > 0;
                 if (!$exists) {
-                    $TokenEntity = new \ObjectBG\TranslationBundle\Entity\TranslationToken();
-                    $TokenEntity->setToken($token);
-                    $this->em->persist($TokenEntity);
+                    $translationToken = new \ObjectBG\TranslationBundle\Entity\TranslationToken();
+                    $translationToken->setToken($token);
+                    $translationToken->setCatalogue($domain);
+                    $this->em->persist($translationToken);
                 }
             }
         }

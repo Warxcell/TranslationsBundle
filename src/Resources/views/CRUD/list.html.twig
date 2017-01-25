@@ -19,6 +19,26 @@
     </style>
 {% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(function () {
+            $("[data-language-toggle]").on('ifChanged', function (event) {
+                toggleLanguage($(this).val());
+            });
+            $("[data-language-toggle]").on('change', function (event) {
+                toggleLanguage($(this).val());
+            });
+
+            function toggleLanguage(languageId) {
+                $("[data-language-id='" + languageId + "']").toggle();
+            }
+        })
+        ;
+    </script>
+{% endblock %}
+
 {% block list_table %}
 
     <div class="filter-form">
@@ -26,6 +46,14 @@
     </div>
 
     <div class="sonata-ba-form">
+
+        {% for lang in languages %}
+            <label>
+                Show
+                {{ lang.name }}
+                <input type="checkbox" checked value="{{ lang.id }}" data-language-toggle/>
+            </label>
+        {% endfor %}
 
         {{ form_start(form) }}
 
@@ -35,7 +63,7 @@
                 <th>{% trans from "ObjectBGTranslationBundle" %}Token{% endtrans %}</th>
                 <th>{% trans from "ObjectBGTranslationBundle" %}Domain{% endtrans %}</th>
                 {% for lang in languages %}
-                    <th>{{ lang.name }}</th>
+                    <th data-language-id="{{ lang.id }}">{{ lang.name }}</th>
                 {% endfor %}
             </tr>
             </thead>
@@ -45,8 +73,8 @@
                 <tr>
                     <td>{{ tokens[i].token }}</td>
                     <td>{{ tokens[i].catalogue }}</td>
-                    {% for translation in token %}
-                        <td>{{ form_row(translation) }}</td>
+                    {% for languageId, translation in token %}
+                        <td data-language-id="{{ languageId }}">{{ form_row(translation) }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
