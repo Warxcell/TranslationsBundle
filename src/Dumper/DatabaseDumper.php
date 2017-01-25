@@ -3,7 +3,7 @@
 namespace ObjectBG\TranslationBundle\Dumper;
 
 use Symfony\Component\Translation\Dumper\DumperInterface;
-use \Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\MessageCatalogue;
 
 class DatabaseDumper implements DumperInterface
 {
@@ -29,7 +29,7 @@ class DatabaseDumper implements DumperInterface
 
         foreach ($domains as $domain) {
             foreach ($domain as $token => $val) {
-                $exists = ((int) $this->em->createQuery($dql)
+                $exists = ((int)$this->em->createQuery($dql)
                         ->setParameter('token', $token)
                         ->getSingleScalarResult()) > 0;
                 if (!$exists) {

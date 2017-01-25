@@ -17,7 +17,7 @@ class Translator extends OriginalTranslator
         parent::loadCatalogue($locale);
 
         $em = $this->container->get('doctrine.orm.entity_manager');
-        /* @var $translationRepository \ObjectBG\TranslationBundle\Repository\Translation  */
+        /* @var $translationRepository \ObjectBG\TranslationBundle\Repository\Translation */
         $translationRepository = $em->getRepository("ObjectBGTranslationBundle:Translation");
 
         $domain = 'messages';

@@ -2,9 +2,9 @@
 
 namespace ObjectBG\TranslationBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType,
-    Symfony\Component\Form\FormBuilderInterface,
-    Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TranslationsFieldsType extends AbstractType
 {
@@ -30,9 +30,11 @@ class TranslationsFieldsType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'fields' => array(),
-        ));
+        $resolver->setDefaults(
+            array(
+                'fields' => array(),
+            )
+        );
     }
 
     public function getName()

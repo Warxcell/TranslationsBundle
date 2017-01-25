@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass="ObjectBG\TranslationBundle\Repository\Translation")
  * @ORM\Table(name="translations",
- *   uniqueConstraints={@Doctrine\ORM\Mapping\UniqueConstraint(columns={"language_id", "translation_token_id", "catalogue"})}
+ *   uniqueConstraints={@Doctrine\ORM\Mapping\UniqueConstraint(columns={"language_id", "translation_token_id"})}
  * )
  * @UniqueEntity(fields={"language", "translationToken", "catalogue"}, message="This translation already exists")
  */
@@ -16,14 +16,12 @@ class Translation
 {
 
     /**
-     * @ORM\Id 
+     * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     protected $id;
 
-    /** @ORM\column(type="string", length=200) */
-    protected $catalogue;
 
     /** @ORM\column(type="text") */
     protected $translation;
@@ -37,7 +35,7 @@ class Translation
 
     /**
      * @ORM\ManyToOne(targetEntity="TranslationToken", fetch="EAGER", inversedBy="translations")
-     * @ORM\JoinColumn(name="translation_token_id", referencedColumnName="id", nullable=false) 
+     * @ORM\JoinColumn(name="translation_token_id", referencedColumnName="id", nullable=false)
      * @var TranslationToken
      */
     protected $translationToken;
@@ -47,10 +45,6 @@ class Translation
         return $this->id;
     }
 
-    public function getCatalogue()
-    {
-        return $this->catalogue;
-    }
 
     public function getTranslation()
     {
@@ -72,18 +66,13 @@ class Translation
         $this->id = $id;
     }
 
-    public function setCatalogue($catalogue)
-    {
-        $this->catalogue = $catalogue;
-    }
-
     public function setTranslation($translation)
     {
         $this->translation = $translation;
     }
 
     /**
-     * 
+     *
      * @param \ObjectBG\TranslationBundle\Entity\Language $language
      */
     public function setLanguage(Language $language)
@@ -92,7 +81,7 @@ class Translation
     }
 
     /**
-     * 
+     *
      * @param \ObjectBG\TranslationBundle\Entity\TranslationToken $translationToken
      */
     public function setTranslationToken(TranslationToken $translationToken)
@@ -102,6 +91,6 @@ class Translation
 
     public function __toString()
     {
-        return (string) $this->translation;
+        return (string)$this->translation;
     }
 }

@@ -3,8 +3,8 @@
 namespace ObjectBG\TranslationBundle\Admin;
 
 use Sonata\AdminBundle\Admin\Admin;
-use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 
@@ -26,7 +26,7 @@ class Translations extends Admin
     protected $baseRoutePattern = 'translation-bundle/translations';
     protected $datagridValues = array(
         '_sort_order' => 'DESC',
-        '_sort_by' => 'id'
+        '_sort_by' => 'id',
     );
 
     // Fields to be shown on create/edit forms
@@ -36,19 +36,16 @@ class Translations extends Admin
             ->add('catalogue', 'hidden', array('data' => 'messages'))
             ->add('translationToken')
             ->add('language')
-            ->add('translation')
-        ;
+            ->add('translation');
     }
 
     // Fields to be shown on filter forms
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('catalogue')
             ->add('translation')
             ->add('language')
-            ->add('translationToken')
-        ;
+            ->add('translationToken');
     }
 
     // Fields to be shown on lists
@@ -56,18 +53,24 @@ class Translations extends Admin
     {
         $listMapper
             ->addIdentifier('id')
-            ->add('catalogue')
-            ->add('translation', null, array(
-                'edit' => 'inline'
-            ))
+            ->add(
+                'translation',
+                null,
+                array(
+                    'edit' => 'inline',
+                )
+            )
             ->add('language')
             ->add('translationToken')
-            ->add('_action', 'actions', array(
-                'actions' => array(
-                    'edit' => array(),
+            ->add(
+                '_action',
+                'actions',
+                array(
+                    'actions' => array(
+                        'edit' => array(),
+                    ),
                 )
-            ))
-        ;
+            );
     }
 
     protected function configureRoutes(RouteCollection $collection)

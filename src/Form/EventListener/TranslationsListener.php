@@ -2,12 +2,12 @@
 
 namespace ObjectBG\TranslationBundle\Form\EventListener;
 
-use Symfony\Component\Form\FormEvent,
-    Symfony\Component\Form\FormEvents,
-    Symfony\Component\EventDispatcher\EventSubscriberInterface,
-    ObjectBG\TranslationBundle\TranslationService,
-    Symfony\Component\PropertyAccess\PropertyAccess,
-    Symfony\Component\PropertyAccess\PropertyAccessor;
+use ObjectBG\TranslationBundle\TranslationService;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class TranslationsListener implements EventSubscriberInterface
 {
@@ -25,7 +25,7 @@ class TranslationsListener implements EventSubscriberInterface
     private $PropertyAccess;
 
     /**
-     * 
+     *
      * @param TranslationService $TranslationService
      */
     public function __construct(TranslationService $TranslationService)
@@ -63,12 +63,16 @@ class TranslationsListener implements EventSubscriberInterface
 
         foreach ($formOptions['locales'] as $locale => $name) {
             if (isset($fieldsOptions[$locale])) {
-                $form->add($locale, 'object_bg_translation_fields', array(
-                    'label' => $name,
-                    'data_class' => $translationClass,
-                    'fields' => $fieldsOptions[$locale],
-                    'required' => in_array($locale, $formOptions['required_locales'])
-                ));
+                $form->add(
+                    $locale,
+                    'object_bg_translation_fields',
+                    array(
+                        'label' => $name,
+                        'data_class' => $translationClass,
+                        'fields' => $fieldsOptions[$locale],
+                        'required' => in_array($locale, $formOptions['required_locales']),
+                    )
+                );
             }
         }
     }
