@@ -10,13 +10,13 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController
 
     public function listAction(\Symfony\Component\HttpFoundation\Request $request = null)
     {
-        $CanEdit = $this->admin->isGranted('EDIT');
-        $CanView = $this->admin->isGranted('LIST');
-        if (false === $CanView && false === $CanEdit) {
+        $canEdit = $this->admin->isGranted('EDIT');
+        $canView = $this->admin->isGranted('LIST');
+        if (false === $canView && false === $canEdit) {
             throw new AccessDeniedException();
         }
 
-        $Request = $this->getRequest();
+        $request = $this->getRequest();
         $em = $this->getDoctrine()->getManager();
 
         $languages = $em->createQuery(
@@ -28,7 +28,7 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController
             ->from('ObjectBGTranslationBundle:TranslationToken', 'token', 'token.id')
             ->leftJoin('token.translations', 'translation');
 
-        $FilterFormBuilder = $this->createFormBuilder(
+        $filterFormBuilder = $this->createFormBuilder(
             null,
             array(
                 'translation_domain' => 'ObjectBGTranslationBundle',
@@ -36,7 +36,7 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController
         )
             ->setMethod('GET');
 
-        $FilterFormBuilder->add(
+        $filterFormBuilder->add(
             'show-only-untranslated',
             'checkbox',
             array(
@@ -45,7 +45,7 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController
             )
         );
 
-        $FilterFormBuilder->add(
+        $filterFormBuilder->add(
             'filter',
             'submit',
             array(
@@ -55,17 +55,17 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController
             )
         );
 
-        $FilterForm = $FilterFormBuilder->getForm();
-        $FilterForm->handleRequest($Request);
-        if ($FilterForm->isValid()) {
-            if ($FilterForm['show-only-untranslated']->getData()) {
+        $filterForm = $filterFormBuilder->getForm();
+        $filterForm->handleRequest($request);
+        if ($filterForm->isValid()) {
+            if ($filterForm['show-only-untranslated']->getData()) {
                 $qb->andWhere('SIZE(token.translations) < :languagesCount')
                     ->setParameter('languagesCount', count($languages));
             }
         }
         $tokens = $qb->getQuery()->getResult();
 
-        $FormBuilder = $this->createFormBuilder();
+        $formBuilder = $this->createFormBuilder();
 //        $FormBuilder->add('tokens', 'collection', array(
 //            'type' => 'text',
 //            'label' => false,
@@ -75,12 +75,12 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController
 //            )
 //        ));
 
-        $FormBuilder->add(
+        $formBuilder->add(
             'translations',
             'collection',
             array(
                 'type' => 'collection',
-                'disabled' => !$CanEdit,
+                'disabled' => !$canEdit,
                 'label' => false,
                 'allow_add' => true,
                 'options' => array(
@@ -94,16 +94,12 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController
             )
         );
 
-        $FormBuilder->addEventListener(
+        $formBuilder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) use ($tokens, $languages) {
                 $data = $event->getData();
-//            $data['tokens'] = array();
                 $data['translations'] = array();
 
-//            foreach ($tokens as $token) {
-//                $data['tokens'][$token->getId()] = $token->getToken();
-//            }
                 foreach ($tokens as $token) {
                     $data['translations'][$token->getId()] = array();
                     foreach ($languages as $lang) {
@@ -114,8 +110,8 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController
             }
         );
 
-        if ($CanEdit) {
-            $FormBuilder->add(
+        if ($canEdit) {
+            $formBuilder->add(
                 'Save',
                 'submit',
                 array(
@@ -126,55 +122,55 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController
             );
         }
 
-        $Form = $FormBuilder->getForm();
-        $Form->handleRequest($Request);
-        if ($Form->isValid()) {
-            $TranslationsEntities = $em->createQuery(
+        $form = $formBuilder->getForm();
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $translationsEntities = $em->createQuery(
                 'SELECT translation FROM ObjectBGTranslationBundle:Translation translation INDEX BY translation.id'
             )
                 ->getResult();
-            $TranslationsEntities = new \Doctrine\Common\Collections\ArrayCollection($TranslationsEntities);
+            $translationsEntities = new \Doctrine\Common\Collections\ArrayCollection($translationsEntities);
 
-            foreach ($Form['translations'] as $TokenId => $Translations) {
+            foreach ($form['translations'] as $TokenId => $translations) {
                 $token = $tokens[$TokenId];
 //                $token->setToken($Form['tokens'][$TokenId]->getData());
 //                $em->persist($token);
 
-                foreach ($Translations as $LanguageId => $FormData) {
-                    $language = $languages[$LanguageId];
-                    $Translation = $TranslationsEntities->filter(
+                foreach ($translations as $languageId => $formData) {
+                    $language = $languages[$languageId];
+                    $translation = $translationsEntities->filter(
                         function ($item) use ($token, $language) {
                             return $item->getTranslationToken() == $token && $item->getLanguage() == $language;
                         }
                     )->first();
 
-                    if ($FormData->getData() == null) {
-                        if ($Translation) {
-                            $em->remove($Translation);
+                    if ($formData->getData() == null) {
+                        if ($translation) {
+                            $em->remove($translation);
                         }
                         continue;
                     }
-                    if (!$Translation) {
-                        $Translation = new \ObjectBG\TranslationBundle\Entity\Translation();
-                        $Translation->setLanguage($language);
-                        $Translation->setTranslationToken($token);
+                    if (!$translation) {
+                        $translation = new \ObjectBG\TranslationBundle\Entity\Translation();
+                        $translation->setLanguage($language);
+                        $translation->setTranslationToken($token);
                     }
-                    $Translation->setTranslation($FormData->getData());
-                    $em->persist($Translation);
+                    $translation->setTranslation($formData->getData());
+                    $em->persist($translation);
                 }
             }
 
             $em->flush();
         }
 
-        $FormView = $Form->createView();
+        $formView = $form->createView();
 
         $Twig = $this->get('twig');
         $FormExtension = $Twig->getExtension('form');
-        $FormExtension->renderer->setTheme($FormView, $this->admin->getFormTheme());
+        $FormExtension->renderer->setTheme($formView, $this->admin->getFormTheme());
 
-        $FilterFormView = $FilterForm->createView();
-        $FormExtension->renderer->setTheme($FilterFormView, $this->admin->getFilterTheme());
+        $filterFormView = $filterForm->createView();
+        $FormExtension->renderer->setTheme($filterFormView, $this->admin->getFilterTheme());
 
         return $this->render(
             'ObjectBGTranslationBundle:CRUD:list.html.twig',
@@ -182,8 +178,8 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController
                 'action' => 'list',
                 'languages' => $languages,
                 'tokens' => $tokens,
-                'form' => $FormView,
-                'filterForm' => $FilterFormView,
+                'form' => $formView,
+                'filterForm' => $filterFormView,
             )
         );
     }
