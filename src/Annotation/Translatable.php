@@ -8,5 +8,5 @@ namespace ObjectBG\TranslationBundle\Annotation;
  */
 class Translatable
 {
-    
+
 }

@@ -22,7 +22,7 @@
                 <argument>ObjectBGTranslationBundle</argument>
             </call>
         </service>
-        
+
         <service id="objectbg.admin.translationToken" class="%object_bg.translation.admin_class_token%">
             <tag name="sonata.admin" manager_type="orm" group="%object_bg.translation.admin_group%" label="Tokens" label_catalogue="ObjectBGTranslationBundle" />
             <argument/>
@@ -35,7 +35,7 @@
                 <argument type="service" id="doctrine.orm.entity_manager" />
             </call>
         </service>
-        
+
         <service id="objectbg.admin.language" class="%object_bg.translation.admin_class_language%">
             <tag name="sonata.admin" manager_type="orm" group="%object_bg.translation.admin_group%" label="Language" label_catalogue="ObjectBGTranslationBundle" />
             <argument />
@@ -48,7 +48,7 @@
                 <argument type="service" id="service_container" />
             </call>
         </service>
-        
+
         <service id="objectbg.admin.token_translation" class="ObjectBG\TranslationBundle\Admin\TokenTranslation">
             <tag name="sonata.admin" manager_type="orm" group="%object_bg.translation.admin_group%" label="Token Translation" label_catalogue="ObjectBGTranslationBundle" show_in_dashboard="false" />
             <argument />
@@ -59,5 +59,5 @@
             </call>
         </service>
     </services>
- 
+
 </container>

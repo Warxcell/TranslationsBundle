@@ -3,10 +3,7 @@
 namespace ObjectBG\TranslationBundle\Admin;
 
 use Sonata\AdminBundle\Admin\Admin;
-use Sonata\AdminBundle\Datagrid\ListMapper;
-use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Route\RouteCollection;
 
 class TokenTranslation extends Admin
 {
@@ -29,10 +26,13 @@ class TokenTranslation extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->add('language', null, array(
-                'disabled' => true
-            ))
-            ->add('translation')
-        ;
+            ->add(
+                'language',
+                null,
+                array(
+                    'disabled' => true,
+                )
+            )
+            ->add('translation');
     }
 }

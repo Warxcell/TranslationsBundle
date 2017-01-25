@@ -2,9 +2,9 @@
 
 namespace ObjectBG\TranslationBundle\Form\EventListener;
 
-use Symfony\Component\Form\FormEvent,
-    Symfony\Component\Form\FormEvents,
-    Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 /**
  * @author David ALLIX

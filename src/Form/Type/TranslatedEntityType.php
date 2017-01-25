@@ -2,10 +2,10 @@
 
 namespace ObjectBG\TranslationBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType,
-    Symfony\Component\OptionsResolver\OptionsResolverInterface,
-    Symfony\Component\OptionsResolver\Options,
-    Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Translated entity
@@ -23,22 +23,25 @@ class TranslatedEntityType extends AbstractType
     }
 
     /**
-     * 
+     *
      * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'translation_path' => 'translations',
-            'translation_property' => null,
-            'property' => function(Options $options) {
-                if (null === $this->request) {
-                    throw new \Exception('Error while getting request');
-                }
+        $resolver->setDefaults(
+            array(
+                'translation_path' => 'translations',
+                'translation_property' => null,
+                'property' => function (Options $options) {
+                    if (null === $this->request) {
+                        throw new \Exception('Error while getting request');
+                    }
 
-                return $options['translation_path'] . '[' . $this->request->getLocale() . '].' . $options['translation_property'];
-            },
-        ));
+                    return $options['translation_path'].'['.$this->request->getLocale(
+                        ).'].'.$options['translation_property'];
+                },
+            )
+        );
     }
 
     public function getParent()

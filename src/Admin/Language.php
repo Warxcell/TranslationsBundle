@@ -3,8 +3,8 @@
 namespace ObjectBG\TranslationBundle\Admin;
 
 use Sonata\AdminBundle\Admin\Admin;
-use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -37,8 +37,7 @@ class Language extends Admin
     {
         $formMapper
             ->add('locale')
-            ->add('name')
-        ;
+            ->add('name');
     }
 
     // Fields to be shown on filter forms
@@ -46,8 +45,7 @@ class Language extends Admin
     {
         $datagridMapper
             ->add('locale')
-            ->add('name')
-        ;
+            ->add('name');
     }
 
     // Fields to be shown on lists
@@ -56,12 +54,15 @@ class Language extends Admin
         $listMapper
             ->addIdentifier('locale')
             ->addIdentifier('name')
-            ->add('_action', 'actions', array(
-                'actions' => array(
-                    'edit' => array(),
-                    'delete' => array(),
+            ->add(
+                '_action',
+                'actions',
+                array(
+                    'actions' => array(
+                        'edit' => array(),
+                        'delete' => array(),
+                    ),
                 )
-            ))
-        ;
+            );
     }
 }

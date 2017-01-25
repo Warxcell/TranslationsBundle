@@ -88,16 +88,21 @@ class CurrentTranslationLoader implements EventSubscriber
         }
         $PropertyAccess = $this->PropertyAccess;
 
-        $CurrentTranslation = $Translations->filter(function($item) use ($TranslationService, $Language, $PropertyAccess) {
+        $CurrentTranslation = $Translations->filter(
+            function ($item) use ($TranslationService, $Language, $PropertyAccess) {
                 $TranslationLanguage = $PropertyAccess->getValue($item, $TranslationService->getLanguageField($item));
-                return $Language instanceof \ObjectBG\TranslationBundle\Entity\Language ? ($TranslationLanguage == $Language) : ($TranslationLanguage->getLocale() == $Language);
-            })->first();
+
+                return $Language instanceof \ObjectBG\TranslationBundle\Entity\Language ? ($TranslationLanguage == $Language) : ($TranslationLanguage->getLocale(
+                    ) == $Language);
+            }
+        )->first();
 
         if (!$CurrentTranslation) {
             return false;
         }
         $CurrentTranslationField = $TranslationService->getCurrentTranslationField($Entity);
         $this->PropertyAccess->setValue($Entity, $CurrentTranslationField, $CurrentTranslation);
+
         return true;
     }
 }

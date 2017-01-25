@@ -2,13 +2,13 @@
 
 namespace ObjectBG\TranslationBundle\Form\Type;
 
-use Symfony\Component\Form\FormView,
-    Symfony\Component\Form\AbstractType,
-    Symfony\Component\Form\FormInterface,
-    Symfony\Component\Form\FormBuilderInterface,
-    Symfony\Component\OptionsResolver\OptionsResolverInterface,
-    ObjectBG\TranslationBundle\Form\EventListener\TranslationsListener,
-    ObjectBG\TranslationBundle\TranslationService;
+use ObjectBG\TranslationBundle\Form\EventListener\TranslationsListener;
+use ObjectBG\TranslationBundle\TranslationService;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TranslationsType extends AbstractType
 {
@@ -57,16 +57,18 @@ class TranslationsType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'by_reference' => false,
-            'empty_data' => new \Doctrine\Common\Collections\ArrayCollection(),
-            'locales' => $this->TranslationService->getLocales(),
-            'default_locale' => $this->TranslationService->getDefaultLocale(),
-            'required_locales' => $this->TranslationService->getRequiredLocales(),
-            'translation_class' => null,
-            'fields' => array(),
-            'exclude_fields' => array(),
-        ));
+        $resolver->setDefaults(
+            array(
+                'by_reference' => false,
+                'empty_data' => new \Doctrine\Common\Collections\ArrayCollection(),
+                'locales' => $this->TranslationService->getLocales(),
+                'default_locale' => $this->TranslationService->getDefaultLocale(),
+                'required_locales' => $this->TranslationService->getRequiredLocales(),
+                'translation_class' => null,
+                'fields' => array(),
+                'exclude_fields' => array(),
+            )
+        );
     }
 
     public function getName()

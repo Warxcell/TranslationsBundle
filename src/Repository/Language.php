@@ -6,5 +6,5 @@ use Doctrine\ORM\EntityRepository;
 
 class Language extends EntityRepository
 {
-    
+
 }

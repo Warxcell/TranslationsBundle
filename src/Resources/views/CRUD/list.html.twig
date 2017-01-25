@@ -8,9 +8,11 @@
             float: left;
             margin-right: 20px;
         }
+
         .filter-form .checkbox {
             display: inline;
         }
+
         .filter-form {
             margin-bottom: 40px;
         }
@@ -29,24 +31,25 @@
 
         <table class="table table-bordered table-striped translation-table">
             <thead>
-                <tr>
-                    <th>{% trans from "ObjectBGTranslationBundle" %}Token{% endtrans %}</th>
-                        {% for lang in languages %}
-                        <th>{{ lang.name }}</th>
-                        {% endfor %}
-                </tr>
+            <tr>
+                <th>{% trans from "ObjectBGTranslationBundle" %}Token{% endtrans %}</th>
+                <th>{% trans from "ObjectBGTranslationBundle" %}Domain{% endtrans %}</th>
+                {% for lang in languages %}
+                    <th>{{ lang.name }}</th>
+                {% endfor %}
+            </tr>
             </thead>
 
             <tbody>
-                {% for i,token in form.translations %}
-                    <tr>
-                        <td>{{ tokens[i].token }}</td>
-                        {#                    <td>{{ form_row(form.tokens[i]) }}</td>#}
-                        {% for translation in token %}
-                            <td>{{ form_row(translation) }}</td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
+            {% for i,token in form.translations %}
+                <tr>
+                    <td>{{ tokens[i].token }}</td>
+                    <td>{{ tokens[i].catalogue }}</td>
+                    {% for translation in token %}
+                        <td>{{ form_row(translation) }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
 
@@ -60,12 +63,12 @@
                     </button>
                     <ul class="dropdown-menu">
                         {% for format in admin.getExportFormats() %}
-                            <li>
-                                <a href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(admin.datagrid, 0) + {'format' : format}) }}">
-                                    <i class="glyphicon glyphicon-download"></i>
-                                    {{ format|upper }}
-                                </a>
-                            <li>
+                        <li>
+                            <a href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(admin.datagrid, 0) + {'format' : format}) }}">
+                                <i class="glyphicon glyphicon-download"></i>
+                                {{ format|upper }}
+                            </a>
+                        <li>
                             {% endfor %}
                     </ul>
                 </div>
@@ -78,5 +81,5 @@
     </div>
 {% endblock %}
 
-{% block list_filters %} 
+{% block list_filters %}
 {% endblock %}

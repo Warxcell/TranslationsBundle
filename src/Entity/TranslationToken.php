@@ -7,21 +7,26 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="ObjectBG\TranslationBundle\Repository\TranslationToken")
- * @ORM\Table(name="translation_tokens")
- * @UniqueEntity(fields={"token"}, message="This token already exists")
+ * @ORM\Table(name="translation_tokens",
+ *       uniqueConstraints={@ORM\UniqueConstraint(columns={"token", "catalogue"})}
+ * )
+ * @UniqueEntity(fields={"token", "catalogue"}, message="This token already exists")
  */
 class TranslationToken
 {
 
     /**
-     * @ORM\Id 
+     * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     private $id;
 
-    /** @ORM\column(type="string", length=200, unique=true) */
+    /** @ORM\Column(type="string", length=200) */
     private $token;
+
+    /** @ORM\column(type="string", length=200) */
+    private $catalogue;
 
     /**
      * @ORM\OneToMany(targetEntity="Translation", mappedBy="translationToken", cascade={"PERSIST", "REMOVE"})
@@ -63,11 +68,29 @@ class TranslationToken
         $this->translations = $translations;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCatalogue()
+    {
+        return $this->catalogue;
+    }
+
+    /**
+     * @param mixed $catalogue
+     */
+    public function setCatalogue($catalogue)
+    {
+        $this->catalogue = $catalogue;
+    }
+
     public function getTranslation(Language $Language)
     {
-        return $this->getTranslations()->filter(function($item) use ($Language) {
+        return $this->getTranslations()->filter(
+            function ($item) use ($Language) {
                 return $item->getLanguage() == $Language;
-            })->first();
+            }
+        )->first();
     }
 
     public function __toString()

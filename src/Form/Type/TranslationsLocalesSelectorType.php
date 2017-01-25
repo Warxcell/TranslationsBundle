@@ -2,8 +2,8 @@
 
 namespace ObjectBG\TranslationBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType,
-    Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TranslationsLocalesSelectorType extends AbstractType
 {
@@ -25,19 +25,21 @@ class TranslationsLocalesSelectorType extends AbstractType
     }
 
     /**
-     * 
+     *
      * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'choices' => array_combine($this->locales, $this->locales),
-            'expanded' => true,
-            'multiple' => true,
-            'attr' => array(
-                'class' => "a2lix_translationsLocalesSelector"
+        $resolver->setDefaults(
+            array(
+                'choices' => array_combine($this->locales, $this->locales),
+                'expanded' => true,
+                'multiple' => true,
+                'attr' => array(
+                    'class' => "a2lix_translationsLocalesSelector",
+                ),
             )
-        ));
+        );
     }
 
     public function getParent()

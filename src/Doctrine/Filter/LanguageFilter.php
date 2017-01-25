@@ -2,8 +2,7 @@
 
 namespace ObjectBG\TranslationBundle\Doctrine\Filter;
 
-use Doctrine\ORM\Mapping\ClassMetaData,
-    Doctrine\ORM\Query\Filter\SQLFilter;
+use Doctrine\ORM\Query\Filter\SQLFilter;
 
 class LanguageFilter extends SQLFilter
 {
@@ -13,6 +12,7 @@ class LanguageFilter extends SQLFilter
         if ($targetEntity->reflClass->getName() != 'ObjectBG\TranslationBundle\Entity\Language') {
             return "";
         }
-        return $targetTableAlias . '.locale = ' . $this->getParameter('locale');
+
+        return $targetTableAlias.'.locale = '.$this->getParameter('locale');
     }
 }

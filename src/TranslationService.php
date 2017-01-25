@@ -2,15 +2,15 @@
 
 namespace ObjectBG\TranslationBundle;
 
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Util\ClassUtils;
-use Doctrine\Common\Annotations\Reader;
-use Symfony\Component\DependencyInjection\Container;
 use ObjectBG\TranslationBundle\Entity\Language;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class TranslationService
 {
@@ -19,7 +19,7 @@ class TranslationService
 
     /**
      *
-     * @var ManagerRegistry 
+     * @var ManagerRegistry
      */
     private $managerRegistry;
 
@@ -60,7 +60,7 @@ class TranslationService
     private $propertyAccess;
 
     /**
-     * 
+     *
      * @param \Symfony\Component\DependencyInjection\Container $Container
      * @param \Symfony\Component\Form\FormRegistry $formRegistry
      * @param \Doctrine\Common\Persistence\ManagerRegistry $managerRegistry
@@ -83,10 +83,14 @@ class TranslationService
 
         $translationService = $this;
         $PropertyAccess = $this->propertyAccess;
-        $Translation = $Translations->filter(function($item) use ($translationService, $language, $PropertyAccess) {
+        $Translation = $Translations->filter(
+            function ($item) use ($translationService, $language, $PropertyAccess) {
                 $TranslationLanguage = $PropertyAccess->getValue($item, $translationService->getLanguageField($item));
-                return $language instanceof Language ? ($TranslationLanguage == $language) : ($TranslationLanguage->getLocale() == $language);
-            })->first();
+
+                return $language instanceof Language ? ($TranslationLanguage == $language) : ($TranslationLanguage->getLocale(
+                    ) == $language);
+            }
+        )->first();
 
         return $Translation;
     }
@@ -99,6 +103,7 @@ class TranslationService
             $this->languages = $manager->getRepository($LanguageClass)->findAll();
             $this->languages = new \Doctrine\Common\Collections\ArrayCollection($this->languages);
         }
+
         return $this->languages;
     }
 
@@ -111,9 +116,12 @@ class TranslationService
         if (!$CurrentLocale) {
             $CurrentLocale = $this->translator->getLocale();
         }
-        return $this->getLanguages()->filter(function(Language $Lang) use ($CurrentLocale) {
+
+        return $this->getLanguages()->filter(
+            function (Language $Lang) use ($CurrentLocale) {
                 return $Lang->getLocale() == $CurrentLocale;
-            })->first();
+            }
+        )->first();
     }
 
     public function getFallbackLocales()
@@ -127,6 +135,7 @@ class TranslationService
         foreach ($this->getLanguages() as $lang) {
             $locales[$lang->getLocale()] = $lang->getName();
         }
+
         return $locales;
     }
 
@@ -148,9 +157,13 @@ class TranslationService
         if ($manager = $this->managerRegistry->getManagerForClass($translatableClass)) {
             $metadataClass = $manager->getMetadataFactory()->getMetadataFor($translatableClass);
             foreach ($metadataClass->reflFields as $Field => $Reflection) {
-                $Annotation = $this->annotationReader->getPropertyAnnotation($Reflection, 'ObjectBG\TranslationBundle\Annotation\Translations');
+                $Annotation = $this->annotationReader->getPropertyAnnotation(
+                    $Reflection,
+                    'ObjectBG\TranslationBundle\Annotation\Translations'
+                );
                 if ($Annotation) {
                     $AssocMapping = $metadataClass->associationMappings[$Field];
+
                     return $AssocMapping['targetEntity'];
                 }
             }
@@ -161,7 +174,7 @@ class TranslationService
     /**
      *
      * @param string $translationClass
-     * @param array  $exclude
+     * @param array $exclude
      * @return array
      */
     protected function getTranslationFields($translationClass, array $exclude = array())
@@ -174,12 +187,16 @@ class TranslationService
             $metadataClass = $manager->getMetadataFactory()->getMetadataFor($translationClass);
 
             foreach ($metadataClass->reflFields as $Field => $Reflection) {
-                $Annotation = $this->annotationReader->getPropertyAnnotation($Reflection, 'ObjectBG\TranslationBundle\Annotation\Column');
+                $Annotation = $this->annotationReader->getPropertyAnnotation(
+                    $Reflection,
+                    'ObjectBG\TranslationBundle\Annotation\Column'
+                );
                 if ($Annotation) {
                     $fields[] = $Field;
                 }
             }
         }
+
         return $fields;
     }
 
@@ -219,14 +236,19 @@ class TranslationService
 
     public function getCurrentTranslationField($translatableClass)
     {
-        return $this->getFieldByAnnotation($translatableClass, 'ObjectBG\TranslationBundle\Annotation\CurrentTranslation');
+        return $this->getFieldByAnnotation(
+            $translatableClass,
+            'ObjectBG\TranslationBundle\Annotation\CurrentTranslation'
+        );
     }
 
     public function getLanguageByLocale($locale)
     {
-        return $this->getLanguages()->filter(function(Language $Lang) use ($locale) {
+        return $this->getLanguages()->filter(
+            function (Language $Lang) use ($locale) {
                 return $Lang->getLocale() == $locale;
-            })->first();
+            }
+        )->first();
     }
 
     /**
@@ -277,12 +299,13 @@ class TranslationService
             // Check existing
             foreach ($formFields as $field) {
                 if (!property_exists($class, $field)) {
-                    throw new \Exception("Field '" . $field . "' doesn't exist in " . $class);
+                    throw new \Exception("Field '".$field."' doesn't exist in ".$class);
                 }
             }
 
             return $formFields;
         }
+
         return array_unique(array_merge($formFields, $this->getTranslationFields($class, $options['exclude_fields'])));
     }
 

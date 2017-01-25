@@ -2,8 +2,8 @@
 
 namespace ObjectBG\TranslationBundle;
 
-use Symfony\Component\Translation\Loader\LoaderInterface;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 class TranslationLoader implements LoaderInterface
@@ -29,7 +29,11 @@ class TranslationLoader implements LoaderInterface
         if ($language) {
             $translations = $this->translationRepository->getTranslations($language, $domain);
             foreach ($translations as $translation) {
-                $catalogue->set($translation->getTranslationToken()->getToken(), $translation->getTranslation(), $domain);
+                $catalogue->set(
+                    $translation->getTranslationToken()->getToken(),
+                    $translation->getTranslation(),
+                    $domain
+                );
             }
         }
 
