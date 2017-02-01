@@ -2,6 +2,8 @@
 
 namespace ObjectBG\TranslationBundle\Dumper;
 
+use Doctrine\ORM\EntityManager;
+use ObjectBG\TranslationBundle\Entity\TranslationToken;
 use Symfony\Component\Translation\Dumper\DumperInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -9,14 +11,14 @@ class DatabaseDumper implements DumperInterface
 {
 
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var EntityManager
      */
     private $em;
 
     /**
-     * @param \Doctrine\ORM\EntityManager $em
+     * @param EntityManager $em
      */
-    public function __construct(\Doctrine\ORM\EntityManager $em)
+    public function __construct(EntityManager $em)
     {
         $this->em = $em;
     }
@@ -25,17 +27,18 @@ class DatabaseDumper implements DumperInterface
     {
         $domains = $messages->all();
 
-        $dql = 'SELECT COUNT(token) FROM ObjectBGTranslationBundle:TranslationToken token WHERE token.token = :token';
+        $dql = 'SELECT COUNT(token) FROM ObjectBGTranslationBundle:TranslationToken token WHERE token.token = :token AND token.catalogue = :catalogue';
 
-        foreach ($domains as $domain) {
-            foreach ($domain as $token => $val) {
+        foreach ($domains as $catalogue => $messages) {
+            foreach ($messages as $token => $val) {
                 $exists = ((int)$this->em->createQuery($dql)
                         ->setParameter('token', $token)
+                        ->setParameter('catalogue', $catalogue)
                         ->getSingleScalarResult()) > 0;
                 if (!$exists) {
-                    $translationToken = new \ObjectBG\TranslationBundle\Entity\TranslationToken();
+                    $translationToken = new TranslationToken();
                     $translationToken->setToken($token);
-                    $translationToken->setCatalogue($domain);
+                    $translationToken->setCatalogue($catalogue);
                     $this->em->persist($translationToken);
                 }
             }
