@@ -9,7 +9,6 @@ class Translator extends OriginalTranslator
 {
 
     /**
-     * @todo add support for multiple domains
      * @param string $locale
      */
     protected function loadCatalogue($locale)
@@ -20,12 +19,15 @@ class Translator extends OriginalTranslator
         /* @var $translationRepository \ObjectBG\TranslationBundle\Repository\Translation */
         $translationRepository = $em->getRepository("ObjectBGTranslationBundle:Translation");
 
-        $domain = 'messages';
         $catalogue = new MessageCatalogue($locale);
 
-        $translations = $translationRepository->getTranslationsByLocale($locale, $domain);
+        $translations = $translationRepository->getAllTranslationsByLocale($locale);
         foreach ($translations as $translation) {
-            $catalogue->set($translation->getTranslationToken()->getToken(), $translation->getTranslation(), $domain);
+            $catalogue->set(
+                $translation->getTranslationToken()->getToken(),
+                $translation->getTranslation(),
+                $translation->getTranslationToken()->getCatalogue()
+            );
         }
 
         $this->catalogues[$locale]->addCatalogue($catalogue);
