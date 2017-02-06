@@ -49,7 +49,7 @@ class Translation extends EntityRepository
     public function getAllTranslationsByLocale($locale)
     {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT translation,token,language FROM ObjectBGTranslationBundle:Translation translation JOIN t.translationToken token JOIN translation.language language WHERE language.locale = :locale"
+            "SELECT translation,token,language FROM ObjectBGTranslationBundle:Translation translation JOIN translation.translationToken token JOIN translation.language language WHERE language.locale = :locale"
         );
         $query->setParameter("locale", $locale);
         $r = $query->getResult();
