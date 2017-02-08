@@ -6,7 +6,6 @@
 
 
     <parameters>
-        <parameter key="object_bg.translation.loader_class">ObjectBG\TranslationBundle\TranslationLoader</parameter>
         <parameter key="object_bg.translation.dumper.database_class">ObjectBG\TranslationBundle\Dumper\DatabaseDumper</parameter>
     </parameters>
 

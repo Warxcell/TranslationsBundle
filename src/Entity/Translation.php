@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass="ObjectBG\TranslationBundle\Repository\Translation")
+ * @ORM\Entity(repositoryClass="ObjectBG\TranslationBundle\Entity\TranslationRepository")
  * @ORM\Table(name="translations",
  *   uniqueConstraints={@Doctrine\ORM\Mapping\UniqueConstraint(columns={"language_id", "translation_token_id"})}
  * )

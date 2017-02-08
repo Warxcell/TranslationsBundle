@@ -2,13 +2,16 @@
 
 namespace ObjectBG\TranslationBundle\Controller;
 
+use ObjectBG\TranslationBundle\Entity\Translation;
+use Sonata\AdminBundle\Controller\CRUDController as BaseCRUDController;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\HttpFoundation\Request;
 
-class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController
+class CRUDController extends BaseCRUDController
 {
 
-    public function listAction(\Symfony\Component\HttpFoundation\Request $request = null)
+    public function listAction(Request $request = null)
     {
         $canEdit = $this->admin->isGranted('EDIT');
         $canView = $this->admin->isGranted('LIST');
@@ -66,14 +69,6 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController
         $tokens = $qb->getQuery()->getResult();
 
         $formBuilder = $this->createFormBuilder();
-//        $FormBuilder->add('tokens', 'collection', array(
-//            'type' => 'text',
-//            'label' => false,
-//            'allow_add' => true,
-//            'options' => array(
-//                'label' => false
-//            )
-//        ));
 
         $formBuilder->add(
             'translations',
@@ -151,7 +146,7 @@ class CRUDController extends \Sonata\AdminBundle\Controller\CRUDController
                         continue;
                     }
                     if (!$translation) {
-                        $translation = new \ObjectBG\TranslationBundle\Entity\Translation();
+                        $translation = new Translation();
                         $translation->setLanguage($language);
                         $translation->setTranslationToken($token);
                     }

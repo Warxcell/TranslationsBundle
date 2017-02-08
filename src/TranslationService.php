@@ -14,7 +14,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class TranslationService
 {
-
     private $typeGuesser;
 
     /**
@@ -299,7 +298,7 @@ class TranslationService
             // Check existing
             foreach ($formFields as $field) {
                 if (!property_exists($class, $field)) {
-                    throw new \Exception("Field '".$field."' doesn't exist in ".$class);
+                    throw new \Exception("Field '" . $field . "' doesn't exist in " . $class);
                 }
             }
 

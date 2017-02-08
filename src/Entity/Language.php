@@ -4,9 +4,10 @@ namespace ObjectBG\TranslationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="ObjectBG\TranslationBundle\Repository\Language")
+ * @ORM\Entity(repositoryClass="ObjectBG\TranslationBundle\Entity\LanguageRepository")
  * @ORM\Table(name="languages")
  * @UniqueEntity(fields={"locale"}, message="This locale already exists")
  * @UniqueEntity(fields={"name"}, message="This name already exists")
@@ -21,10 +22,17 @@ class Language
      */
     private $id;
 
-    /** @ORM\column(type="string", length=200, unique=true) */
+    /**
+     * @Assert\Locale()
+     * @Assert\NotBlank
+     * @ORM\Column(type="string", length=200, unique=true)
+     */
     private $locale;
 
-    /** @ORM\column(type="string", length=200, unique=true) */
+    /**
+     * @Assert\NotBlank
+     * @ORM\column(type="string", length=200, unique=true)
+     */
     private $name;
 
     public function getId()

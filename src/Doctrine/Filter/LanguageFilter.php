@@ -13,6 +13,6 @@ class LanguageFilter extends SQLFilter
             return "";
         }
 
-        return $targetTableAlias.'.locale = '.$this->getParameter('locale');
+        return $targetTableAlias . '.locale = ' . $this->getParameter('locale');
     }
 }

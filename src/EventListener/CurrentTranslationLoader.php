@@ -3,6 +3,7 @@
 namespace ObjectBG\TranslationBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
+use ObjectBG\TranslationBundle\Entity\Language;
 use ObjectBG\TranslationBundle\TranslatableInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -12,27 +13,29 @@ class CurrentTranslationLoader implements EventSubscriber
 {
 
     /**
-     *
      * @var Container
      */
-    private $Container;
+    private $container;
 
     /**
-     *
      * @var PropertyAccessor
      */
-    private $PropertyAccess;
-    private $Fallback = true;
+    private $propertyAccessor;
 
-    public function __construct(Container $Container)
+    /**
+     * @var bool
+     */
+    private $fallback = true;
+
+    public function __construct(Container $container)
     {
-        $this->Container = $Container;
-        $this->PropertyAccess = PropertyAccess::createPropertyAccessor();
+        $this->container = $container;
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
 
     public function doFallback($trueFalse)
     {
-        $this->Fallback = $trueFalse;
+        $this->fallback = $trueFalse;
     }
 
     public function getSubscribedEvents()
@@ -52,19 +55,19 @@ class CurrentTranslationLoader implements EventSubscriber
 
     public function initializeCurrentTranslation($Entity)
     {
-        $TranslationService = $this->Container->get('object_bg.translation.service.translation');
-        $CurrentLanguage = $TranslationService->getCurrentLanguage();
+        $translationService = $this->container->get('object_bg.translation.service.translation');
+        $CurrentLanguage = $translationService->getCurrentLanguage();
         $success = $this->initializeTranslation($Entity, $CurrentLanguage);
 
-        if ($success == false && $this->Fallback === true) {
+        if ($success == false && $this->fallback === true) {
             $this->initializeFallbackTranslation($Entity);
         }
     }
 
     private function initializeFallbackTranslation($Entity)
     {
-        $TranslationService = $this->Container->get('object_bg.translation.service.translation');
-        $fallbacks = $TranslationService->getFallbackLocales();
+        $translationService = $this->container->get('object_bg.translation.service.translation');
+        $fallbacks = $translationService->getFallbackLocales();
 
         foreach ($fallbacks as $fallback) {
             if ($this->initializeTranslation($Entity, $fallback)) {
@@ -73,35 +76,38 @@ class CurrentTranslationLoader implements EventSubscriber
         }
     }
 
-    public function initializeTranslation($Entity, $Language)
+    public function initializeTranslation($entity, $languageOrLocale)
     {
-        if (!$Entity instanceof TranslatableInterface) {
+        if (!$entity instanceof TranslatableInterface) {
             throw new \RuntimeException('Entity is not translatable');
         }
 
-        $TranslationService = $this->Container->get('object_bg.translation.service.translation');
+        $translationService = $this->container->get('object_bg.translation.service.translation');
 
-        $Translations = $this->PropertyAccess->getValue($Entity, $TranslationService->getTranslationsField($Entity));
+        $translations = $this->propertyAccessor->getValue($entity, $translationService->getTranslationsField($entity));
 
-        if (!$Translations) {
+        if (!$translations) {
             return false;
         }
-        $PropertyAccess = $this->PropertyAccess;
+        $propertyAccessor = $this->propertyAccessor;
 
-        $CurrentTranslation = $Translations->filter(
-            function ($item) use ($TranslationService, $Language, $PropertyAccess) {
-                $TranslationLanguage = $PropertyAccess->getValue($item, $TranslationService->getLanguageField($item));
+        $currentTranslation = $translations->filter(
+            function ($item) use ($translationService, $languageOrLocale, $propertyAccessor) {
+                $translationLanguage = $propertyAccessor->getValue($item, $translationService->getLanguageField($item));
 
-                return $Language instanceof \ObjectBG\TranslationBundle\Entity\Language ? ($TranslationLanguage == $Language) : ($TranslationLanguage->getLocale(
-                    ) == $Language);
+                if ($languageOrLocale instanceof Language) {
+                    return $translationLanguage == $languageOrLocale;
+                } else {
+                    $translationLanguage->getLocale() == $languageOrLocale;
+                }
             }
         )->first();
 
-        if (!$CurrentTranslation) {
+        if (!$currentTranslation) {
             return false;
         }
-        $CurrentTranslationField = $TranslationService->getCurrentTranslationField($Entity);
-        $this->PropertyAccess->setValue($Entity, $CurrentTranslationField, $CurrentTranslation);
+        $currentTranslationField = $translationService->getCurrentTranslationField($entity);
+        $this->propertyAccessor->setValue($entity, $currentTranslationField, $currentTranslation);
 
         return true;
     }

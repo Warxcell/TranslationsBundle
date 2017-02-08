@@ -4,14 +4,13 @@ namespace ObjectBG\TranslationBundle\Exception;
 
 class InvalidArgumentException extends \InvalidArgumentException
 {
-
-    public static function missingTranslations($TranslatableClass)
+    public static function missingTranslations($translatableClass)
     {
-        return new self('Missing translations association for entity '.$TranslatableClass);
+        return new self('Missing translations association for entity ' . $translatableClass);
     }
 
-    public static function missingRequiredAnnotation($Class, $Annotation)
+    public static function missingRequiredAnnotation($class, $annotation)
     {
-        return new self($Class.' is missing required annotation '.$Annotation);
+        return new self($class . ' is missing required annotation ' . $annotation);
     }
 }

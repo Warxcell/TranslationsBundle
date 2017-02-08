@@ -1,11 +1,11 @@
 <?php
 
-namespace ObjectBG\TranslationBundle\Repository;
+namespace ObjectBG\TranslationBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use ObjectBG\TranslationBundle\Entity\Language as LanguageEntity;
 
-class Translation extends EntityRepository
+class TranslationRepository extends EntityRepository
 {
     /**
      * Return all translations for specified token
@@ -55,5 +55,20 @@ class Translation extends EntityRepository
         $r = $query->getResult();
 
         return $r;
+    }
+
+
+    public function getTranslationByTokenAndLanguage(TranslationToken $translationToken, LanguageEntity $language)
+    {
+
+        $em = $this->getEntityManager();
+        $dql = "SELECT t FROM ObjectBGTranslationBundle:Translation t  WHERE t.translationToken = :token AND t.language = :language";
+
+        $exists = $em->createQuery($dql)
+            ->setParameter('token', $translationToken)
+            ->setParameter('language', $language)
+            ->getOneOrNullResult();
+
+        return $exists;
     }
 }

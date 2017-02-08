@@ -14,7 +14,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class ObjectBGTranslationExtension extends Extension
 {
-
     /**
      * {@inheritDoc}
      */
@@ -23,7 +22,7 @@ class ObjectBGTranslationExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('admins.xml');
     }
