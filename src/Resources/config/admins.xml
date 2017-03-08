@@ -21,6 +21,9 @@
             <call method="setTranslationDomain">
                 <argument>ObjectBGTranslationBundle</argument>
             </call>
+            <call method="setEntityManager">
+                <argument id="doctrine.orm.entity_manager" type="service" />
+            </call>
         </service>
 
         <service id="objectbg.admin.translationToken" class="%object_bg.translation.admin_class_token%">

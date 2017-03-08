@@ -2,6 +2,7 @@
 
 namespace ObjectBG\TranslationBundle\Admin;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -28,6 +29,18 @@ class Translations extends Admin
         '_sort_order' => 'DESC',
         '_sort_by' => 'id',
     );
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    /**n
+     * @param $em EntityManagerInterface
+     */
+    public function setEntityManager(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
 
     // Fields to be shown on create/edit forms
     protected function configureFormFields(FormMapper $formMapper)
@@ -77,5 +90,22 @@ class Translations extends Admin
     {
         $collection->remove('create');
         $collection->remove('edit');
+    }
+
+    /**
+     * @return VM5TranslationSourceIterator
+     */
+    public function getDataSourceIterator()
+    {
+        $qb = $this->em->createQueryBuilder()
+            ->select('token')
+            ->from('ObjectBGTranslationBundle:TranslationToken', 'token')
+            ->orderBy('token.id')
+            ->getQuery();
+        $languages = $this->em->createQuery(
+            'SELECT lang FROM ObjectBGTranslationBundle:Language lang INDEX BY lang.id'
+        )->getResult();
+
+        return new VM5TranslationSourceIterator($qb, $languages);
     }
 }
