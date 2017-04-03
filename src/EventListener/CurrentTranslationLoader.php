@@ -111,7 +111,7 @@ class CurrentTranslationLoader implements EventSubscriber
                 if ($languageOrLocale instanceof Language) {
                     return $translationLanguage == $languageOrLocale;
                 } else {
-                    $translationLanguage->getLocale() == $languageOrLocale;
+                    return $translationLanguage->getLocale() == $languageOrLocale;
                 }
             }
         )->first();
