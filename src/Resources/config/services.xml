@@ -24,7 +24,11 @@
             <argument type="service" id="object_bg.translation.service.translation" />
         </service>
 
-        <service id="object_bg.translation.current_translation_loader" class="ObjectBG\TranslationBundle\EventListener\CurrentTranslationLoader">
+        <service id="object_bg.translation.current_translation_loader" class="ObjectBG\TranslationBundle\CurrentTranslationLoader">
+            <argument type="service" id="service_container" />
+        </service>
+
+        <service id="object_bg.translation.current_translation_loader_listener" class="ObjectBG\TranslationBundle\EventListener\CurrentTranslationLoader">
             <tag name="doctrine.event_subscriber" />
             <argument type="service" id="service_container" />
         </service>
