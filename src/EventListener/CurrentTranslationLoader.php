@@ -26,6 +26,10 @@ class CurrentTranslationLoader implements EventSubscriber
      * @var bool
      */
     private $fallback = true;
+    /**
+     * @var array
+     */
+    private $managed = [];
 
     public function __construct(Container $container)
     {
@@ -43,9 +47,16 @@ class CurrentTranslationLoader implements EventSubscriber
         return array('postLoad');
     }
 
-    public function postLoad($Event)
+    public function flush()
     {
-        $Entity = $Event->getEntity();
+        foreach ($this->managed as $entity) {
+            $this->initializeCurrentTranslation($entity);
+        }
+    }
+
+    public function postLoad($event)
+    {
+        $Entity = $event->getEntity();
         if (!$Entity instanceof TranslatableInterface) {
             return;
         }
@@ -53,24 +64,24 @@ class CurrentTranslationLoader implements EventSubscriber
         $this->initializeCurrentTranslation($Entity);
     }
 
-    public function initializeCurrentTranslation($Entity)
+    public function initializeCurrentTranslation($entity)
     {
         $translationService = $this->container->get('object_bg.translation.service.translation');
         $CurrentLanguage = $translationService->getCurrentLanguage();
-        $success = $this->initializeTranslation($Entity, $CurrentLanguage);
+        $success = $this->initializeTranslation($entity, $CurrentLanguage);
 
         if ($success == false && $this->fallback === true) {
-            $this->initializeFallbackTranslation($Entity);
+            $this->initializeFallbackTranslation($entity);
         }
     }
 
-    private function initializeFallbackTranslation($Entity)
+    private function initializeFallbackTranslation($entity)
     {
         $translationService = $this->container->get('object_bg.translation.service.translation');
         $fallbacks = $translationService->getFallbackLocales();
 
         foreach ($fallbacks as $fallback) {
-            if ($this->initializeTranslation($Entity, $fallback)) {
+            if ($this->initializeTranslation($entity, $fallback)) {
                 break;
             }
         }
@@ -81,6 +92,8 @@ class CurrentTranslationLoader implements EventSubscriber
         if (!$entity instanceof TranslatableInterface) {
             throw new \RuntimeException('Entity is not translatable');
         }
+        $oid = spl_object_hash($entity);
+        $this->managed[$oid] = $entity;
 
         $translationService = $this->container->get('object_bg.translation.service.translation');
 

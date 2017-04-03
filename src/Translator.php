@@ -8,6 +8,15 @@ use Symfony\Component\Translation\MessageCatalogue;
 class Translator extends OriginalTranslator
 {
 
+    public function setLocale($locale)
+    {
+        $return = parent::setLocale($locale);
+
+        $this->container->get('object_bg.translation.current_translation_loader')->flush();
+
+        return $return;
+    }
+
     /**
      * @param string $locale
      */
