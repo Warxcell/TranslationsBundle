@@ -3,9 +3,10 @@
 namespace ObjectBG\TranslationBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Options;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 /**
  * Translated entity
@@ -17,16 +18,16 @@ class TranslatedEntityType extends AbstractType
 
     private $request;
 
-    public function setRequest(Request $request = null)
+    public function setRequest(RequestStack $request = null)
     {
-        $this->request = $request;
+        $this->request = $request->getCurrentRequest();
     }
 
     /**
      *
-     * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
+     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
@@ -46,11 +47,7 @@ class TranslatedEntityType extends AbstractType
 
     public function getParent()
     {
-        return 'entity';
+       return EntityType::class;
     }
 
-    public function getName()
-    {
-        return 'object_bg_translated_entity';
-    }
 }
