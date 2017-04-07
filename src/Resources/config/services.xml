@@ -59,7 +59,7 @@
 
         <service id="object_bg.translation.form.type.translatedEntity" class="ObjectBG\TranslationBundle\Form\Type\TranslatedEntityType">
             <call method="setRequest">
-                <argument type="service" id="request" on-invalid="null" strict="false" />
+                <argument type="service" id="request_stack" on-invalid="null" strict="false" />
             </call>
             <tag name="form.type" alias="object_bg_translated_entity" />
         </service>

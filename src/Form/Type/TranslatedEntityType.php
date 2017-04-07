@@ -15,7 +15,9 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
  */
 class TranslatedEntityType extends AbstractType
 {
-
+    /**
+     * @var $request RequestStack
+     */
     private $request;
 
     public function setRequest(RequestStack $request = null)
@@ -38,8 +40,7 @@ class TranslatedEntityType extends AbstractType
                         throw new \Exception('Error while getting request');
                     }
 
-                    return $options['translation_path'].'['.$this->request->getLocale(
-                        ).'].'.$options['translation_property'];
+                    return $options['translation_path'] . '[' . $this->request->getLocale() . '].' . $options['translation_property'];
                 },
             )
         );
@@ -47,7 +48,7 @@ class TranslatedEntityType extends AbstractType
 
     public function getParent()
     {
-       return EntityType::class;
+        return EntityType::class;
     }
 
 }

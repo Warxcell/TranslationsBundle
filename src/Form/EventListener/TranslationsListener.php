@@ -2,6 +2,7 @@
 
 namespace ObjectBG\TranslationBundle\Form\EventListener;
 
+use ObjectBG\TranslationBundle\Form\Type\TranslationsFieldsType;
 use ObjectBG\TranslationBundle\TranslationService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
@@ -65,7 +66,7 @@ class TranslationsListener implements EventSubscriberInterface
             if (isset($fieldsOptions[$locale])) {
                 $form->add(
                     $locale,
-                    'object_bg_translation_fields',
+                    TranslationsFieldsType::class,
                     array(
                         'label' => $name,
                         'data_class' => $translationClass,

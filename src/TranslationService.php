@@ -60,19 +60,19 @@ class TranslationService
 
     /**
      *
-     * @param \Symfony\Component\DependencyInjection\Container $Container
+     * @param \Symfony\Component\DependencyInjection\Container $container
      * @param \Symfony\Component\Form\FormRegistry $formRegistry
      * @param \Doctrine\Common\Persistence\ManagerRegistry $managerRegistry
      * @param \Doctrine\Common\Annotations\Reader $Reader
      */
-    public function __construct(Container $Container)
+    public function __construct(Container $container)
     {
-        $this->container = $Container;
-        $this->typeGuesser = $Container->get('form.registry')->getTypeGuesser();
-        $this->managerRegistry = $Container->get('doctrine');
-        $this->annotationReader = $Container->get('annotation_reader');
-        $this->translator = $Container->get('translator.default');
-        $this->request = $Container->get('request');
+        $this->container = $container;
+        $this->typeGuesser = $container->get('form.registry')->getTypeGuesser();
+        $this->managerRegistry = $container->get('doctrine');
+        $this->annotationReader = $container->get('annotation_reader');
+        $this->translator = $container->get('translator.default');
+        $this->request = $container->get('request_stack')->getCurrentRequest();
         $this->propertyAccess = PropertyAccess::createPropertyAccessor();
     }
 
@@ -353,9 +353,9 @@ class TranslationService
             $options['pattern'] = $patternGuess->getValue();
         }
 
-        if (!isset($options['max_length']) && ($maxLengthGuess = $guesser->guessMaxLength($class, $property))) {
-            $options['max_length'] = $maxLengthGuess->getValue();
-        }
+//        if (!isset($options['max_length']) && ($maxLengthGuess = $guesser->guessMaxLength($class, $property))) {
+//            $options['max_length'] = $maxLengthGuess->getValue();
+//        }
 
         return $options;
     }
