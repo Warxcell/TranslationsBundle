@@ -4,7 +4,7 @@ namespace ObjectBG\TranslationBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TranslationsFieldsType extends AbstractType
 {
@@ -26,9 +26,9 @@ class TranslationsFieldsType extends AbstractType
 
     /**
      *
-     * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
+     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
@@ -37,8 +37,5 @@ class TranslationsFieldsType extends AbstractType
         );
     }
 
-    public function getName()
-    {
-        return 'object_bg_translation_fields';
-    }
+
 }

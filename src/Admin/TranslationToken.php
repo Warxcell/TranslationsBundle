@@ -3,14 +3,14 @@
 namespace ObjectBG\TranslationBundle\Admin;
 
 use Doctrine\ORM\EntityManager;
-use Sonata\AdminBundle\Admin\Admin;
+use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-class TranslationToken extends Admin
+class TranslationToken extends AbstractAdmin
 {
 
     /**
