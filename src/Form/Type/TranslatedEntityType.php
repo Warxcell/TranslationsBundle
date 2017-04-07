@@ -16,7 +16,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 class TranslatedEntityType extends AbstractType
 {
     /**
-     * @var $request RequestStack
+     * @var Request
      */
     private $request;
 
