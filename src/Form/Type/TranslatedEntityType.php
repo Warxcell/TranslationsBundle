@@ -2,11 +2,11 @@
 
 namespace ObjectBG\TranslationBundle\Form\Type;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 /**
  * Translated entity
@@ -40,7 +40,8 @@ class TranslatedEntityType extends AbstractType
                         throw new \Exception('Error while getting request');
                     }
 
-                    return $options['translation_path'] . '[' . $this->request->getLocale() . '].' . $options['translation_property'];
+                    return $options['translation_path'].'['.$this->request->getLocale(
+                        ).'].'.$options['translation_property'];
                 },
             )
         );
@@ -51,4 +52,8 @@ class TranslatedEntityType extends AbstractType
         return EntityType::class;
     }
 
+    public function getBlockPrefix()
+    {
+        return 'object_bg_translated_entity';
+    }
 }

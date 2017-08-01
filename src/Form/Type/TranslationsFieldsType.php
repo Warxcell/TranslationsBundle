@@ -37,5 +37,8 @@ class TranslationsFieldsType extends AbstractType
         );
     }
 
-
+    public function getBlockPrefix()
+    {
+        return 'object_bg_translation_fields';
+    }
 }

@@ -44,7 +44,11 @@ class TranslationsLocalesSelectorType extends AbstractType
 
     public function getParent()
     {
-       return \Symfony\Component\Form\Extension\Core\Type\ChoiceType::class;
+        return \Symfony\Component\Form\Extension\Core\Type\ChoiceType::class;
     }
 
+    public function getBlockPrefix()
+    {
+        return 'object_bg_locales_selector';
+    }
 }

@@ -132,7 +132,7 @@ class TranslationService
     {
         $locales = array();
         foreach ($this->getLanguages() as $lang) {
-            $locales[$lang->getLocale()] = $lang->getName();
+            $locales[$lang->getLocale()] = $lang->getName().'('.$lang->getLocale().')';
         }
 
         return $locales;
@@ -298,7 +298,7 @@ class TranslationService
             // Check existing
             foreach ($formFields as $field) {
                 if (!property_exists($class, $field)) {
-                    throw new \Exception("Field '" . $field . "' doesn't exist in " . $class);
+                    throw new \Exception("Field '".$field."' doesn't exist in ".$class);
                 }
             }
 

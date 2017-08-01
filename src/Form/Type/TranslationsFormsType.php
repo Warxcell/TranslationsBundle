@@ -95,4 +95,8 @@ class TranslationsFormsType extends AbstractType
         );
     }
 
+    public function getBlockPrefix()
+    {
+        return 'object_bg_translations_forms';
+    }
 }
