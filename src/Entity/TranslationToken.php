@@ -95,6 +95,6 @@ class TranslationToken
 
     public function __toString()
     {
-        return $this->token;
+        return (string)$this->token;
     }
 }
