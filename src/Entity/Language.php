@@ -67,6 +67,6 @@ class Language
 
     public function __toString()
     {
-        return $this->name;
+        return (string)$this->name;
     }
 }
