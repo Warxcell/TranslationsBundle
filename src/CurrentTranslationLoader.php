@@ -110,6 +110,11 @@ class CurrentTranslationLoader
         return false;
     }
 
+    /**
+     * @param TranslatableInterface $translatable
+     * @param Language|string $languageOrLocale
+     * @return TranslationInterface|null
+     */
     public function getTranslation(TranslatableInterface $translatable, $languageOrLocale)
     {
         /** @var TranslationService $translationService */
