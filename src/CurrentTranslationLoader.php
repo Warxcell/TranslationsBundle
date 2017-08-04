@@ -55,9 +55,14 @@ class CurrentTranslationLoader
         $translationService = $this->container->get('object_bg.translation.service.translation');
         /** @var Language $currentLanguage */
         $currentLanguage = $translationService->getCurrentLanguage();
-        $success = $this->initializeTranslation($entity, $currentLanguage);
 
-        $locale = $currentLanguage->getLocale();
+        $locale = null;
+        $success = false;
+
+        if ($currentLanguage) {
+            $success = $this->initializeTranslation($entity, $currentLanguage);
+            $locale = $currentLanguage->getLocale();
+        }
 
         if ($success == false) {
             $locale = $this->initializeFallbackTranslation($entity);
