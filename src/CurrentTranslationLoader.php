@@ -41,6 +41,11 @@ class CurrentTranslationLoader
         }
     }
 
+    public function detach(TranslatableInterface $translatable)
+    {
+        unset($this->managedEntities[$this->getId($translatable)]);
+    }
+
     /**
      * @param TranslatableInterface $entity
      */
@@ -66,6 +71,7 @@ class CurrentTranslationLoader
      */
     private function initializeFallbackTranslation(TranslatableInterface $entity)
     {
+        /** @var TranslationService $translationService */
         $translationService = $this->container->get('object_bg.translation.service.translation');
         $fallbackLocales = $translationService->getFallbackLocales();
 
