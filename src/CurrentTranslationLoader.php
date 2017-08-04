@@ -20,10 +20,6 @@ class CurrentTranslationLoader
     private $propertyAccessor;
 
     /**
-     * @var bool
-     */
-    private $fallback = true;
-    /**
      * @var array
      */
     private $managedEntities = [];
@@ -34,13 +30,6 @@ class CurrentTranslationLoader
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
 
-    /**
-     * @param $trueFalse
-     */
-    public function doFallback($trueFalse)
-    {
-        $this->fallback = $trueFalse;
-    }
 
     /**
      * Reinitialize all current translations of all managed entities
@@ -57,13 +46,19 @@ class CurrentTranslationLoader
      */
     public function initializeCurrentTranslation(TranslatableInterface $entity)
     {
+        /** @var TranslationService $translationService */
         $translationService = $this->container->get('object_bg.translation.service.translation');
-        $CurrentLanguage = $translationService->getCurrentLanguage();
-        $success = $this->initializeTranslation($entity, $CurrentLanguage);
+        /** @var Language $currentLanguage */
+        $currentLanguage = $translationService->getCurrentLanguage();
+        $success = $this->initializeTranslation($entity, $currentLanguage);
 
-        if ($success == false && $this->fallback === true) {
-            $this->initializeFallbackTranslation($entity);
+        $locale = $currentLanguage->getLocale();
+
+        if ($success == false) {
+            $locale = $this->initializeFallbackTranslation($entity);
         }
+
+        return $locale;
     }
 
     /**
@@ -76,7 +71,7 @@ class CurrentTranslationLoader
 
         foreach ($fallbackLocales as $fallbackLocale) {
             if ($this->initializeTranslation($entity, $fallbackLocale)) {
-                break;
+                return $fallbackLocale;
             }
         }
     }
@@ -88,16 +83,32 @@ class CurrentTranslationLoader
      */
     public function initializeTranslation(TranslatableInterface $entity, $languageOrLocale)
     {
-        $oid = spl_object_hash($entity);
-        $this->managedEntities[$oid] = $entity;
+        $this->managedEntities[$this->getId($entity)] = $entity;
 
+        /** @var TranslationService $translationService */
         $translationService = $this->container->get('object_bg.translation.service.translation');
 
-        $translations = $this->propertyAccessor->getValue($entity, $translationService->getTranslationsField($entity));
+        $currentTranslation = $this->getTranslation($entity, $languageOrLocale);
+        if ($currentTranslation) {
+            $currentTranslationField = $translationService->getCurrentTranslationField($entity);
+            $this->propertyAccessor->setValue($entity, $currentTranslationField, $currentTranslation);
 
-        if (!$translations) {
-            return false;
+            return true;
         }
+
+        return false;
+    }
+
+    public function getTranslation(TranslatableInterface $translatable, $languageOrLocale)
+    {
+        /** @var TranslationService $translationService */
+        $translationService = $this->container->get('object_bg.translation.service.translation');
+
+        $translations = $this->propertyAccessor->getValue(
+            $translatable,
+            $translationService->getTranslationsField($translatable)
+        );
+
         $propertyAccessor = $this->propertyAccessor;
 
         $currentTranslation = $translations->filter(
@@ -113,11 +124,14 @@ class CurrentTranslationLoader
         )->first();
 
         if (!$currentTranslation) {
-            return false;
+            return null;
         }
-        $currentTranslationField = $translationService->getCurrentTranslationField($entity);
-        $this->propertyAccessor->setValue($entity, $currentTranslationField, $currentTranslation);
 
-        return true;
+        return $currentTranslation;
+    }
+
+    private function getId(TranslatableInterface $translatable)
+    {
+        return spl_object_hash($translatable);
     }
 }
