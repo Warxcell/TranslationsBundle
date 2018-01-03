@@ -3,13 +3,13 @@
 namespace ObjectBG\TranslationBundle\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sonata\AdminBundle\Admin\Admin;
+use Sonata\AdminBundle\Admin\Admin as AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 
-class Translations extends Admin
+class Translations extends AbstractAdmin
 {
 
     /**

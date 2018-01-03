@@ -10,6 +10,7 @@
         <parameter key="object_bg.translation.admin_class_token">ObjectBG\TranslationBundle\Admin\TranslationToken</parameter>
         <parameter key="object_bg.translation.admin_class_language">ObjectBG\TranslationBundle\Admin\Language</parameter>
         <parameter key="object_bg.translation.admin_group">Translations</parameter>
+        <parameter key="object_bg.translation.translation_domain">ObjectBGTranslationBundle</parameter>
     </parameters>
 
     <services>
@@ -19,7 +20,7 @@
             <argument>ObjectBG\TranslationBundle\Entity\Translation</argument>
             <argument>ObjectBGTranslationBundle:CRUD</argument>
             <call method="setTranslationDomain">
-                <argument>ObjectBGTranslationBundle</argument>
+                <argument>%object_bg.translation.translation_domain%</argument>
             </call>
             <call method="setEntityManager">
                 <argument id="doctrine.orm.entity_manager" type="service" />
@@ -32,7 +33,7 @@
             <argument>ObjectBG\TranslationBundle\Entity\TranslationToken</argument>
             <argument />
             <call method="setTranslationDomain">
-                <argument>ObjectBGTranslationBundle</argument>
+                <argument>%object_bg.translation.translation_domain%</argument>
             </call>
             <call method="setEntityManager">
                 <argument type="service" id="doctrine.orm.entity_manager" />
@@ -47,9 +48,6 @@
             <call method="setTranslationDomain">
                 <argument>ObjectBGTranslationBundle</argument>
             </call>
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
-            </call>
         </service>
 
         <service id="objectbg.admin.token_translation" class="ObjectBG\TranslationBundle\Admin\TokenTranslation">
@@ -58,7 +56,7 @@
             <argument>ObjectBG\TranslationBundle\Entity\Translation</argument>
             <argument />
             <call method="setTranslationDomain">
-                <argument>ObjectBGTranslationBundle</argument>
+                <argument>%object_bg.translation.translation_domain%</argument>
             </call>
         </service>
     </services>

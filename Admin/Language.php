@@ -2,7 +2,7 @@
 
 namespace ObjectBG\TranslationBundle\Admin;
 
-use Sonata\AdminBundle\Admin\AbstractAdmin;
+use Sonata\AdminBundle\Admin\Admin as AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -10,14 +10,6 @@ use Symfony\Component\DependencyInjection\Container;
 
 class Language extends AbstractAdmin
 {
-
-    private $Container;
-
-    public function setContainer(Container $Container)
-    {
-        $this->Container = $Container;
-    }
-
     /**
      * The base route name used to generate the routing information
      *

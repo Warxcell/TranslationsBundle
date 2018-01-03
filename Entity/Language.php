@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity(fields={"locale"}, message="This locale already exists")
  * @UniqueEntity(fields={"name"}, message="This name already exists")
  */
-class Language
+class Language implements \VM5\EntityTranslationsBundle\Model\Language
 {
 
     /**
@@ -25,13 +25,13 @@ class Language
     /**
      * @Assert\Locale()
      * @Assert\NotBlank
-     * @ORM\Column(type="string", length=200, unique=true)
+     * @ORM\Column(type="string", length=10, unique=true)
      */
     private $locale;
 
     /**
      * @Assert\NotBlank
-     * @ORM\column(type="string", length=200, unique=true)
+     * @ORM\Column(type="string", length=200, unique=true)
      */
     private $name;
 

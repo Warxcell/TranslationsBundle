@@ -2,7 +2,7 @@
 
 namespace ObjectBG\TranslationBundle\Admin;
 
-use Sonata\AdminBundle\Admin\AbstractAdmin;
+use Sonata\AdminBundle\Admin\Admin as AbstractAdmin;
 use Sonata\AdminBundle\Form\FormMapper;
 
 class TokenTranslation extends AbstractAdmin

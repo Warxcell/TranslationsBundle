@@ -14,7 +14,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Translation
 {
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -22,8 +21,9 @@ class Translation
      */
     protected $id;
 
-
-    /** @ORM\column(type="text") */
+    /**
+     * @ORM\column(type="text")
+     */
     protected $translation;
 
     /**
@@ -44,7 +44,6 @@ class Translation
     {
         return $this->id;
     }
-
 
     public function getTranslation()
     {
@@ -81,7 +80,6 @@ class Translation
     }
 
     /**
-     *
      * @param \ObjectBG\TranslationBundle\Entity\TranslationToken $translationToken
      */
     public function setTranslationToken(TranslationToken $translationToken)
