@@ -73,6 +73,9 @@ class TranslationToken extends AbstractAdmin
             function (FormEvent $Event) use ($languages) {
                 $data = $Event->getData();
                 if ($data) {
+                    if ($data->getCatalogue() === null) {
+                        $data->setCatalogue('messages');
+                    }
                     $translations = $data->getTranslations();
 
                     $langs = array();
@@ -127,7 +130,7 @@ class TranslationToken extends AbstractAdmin
                         if ($value['value'] == null) {
                             return;
                         }
-                        $subQuery = 'SELECT COUNT(lang) FROM ObjectBGTranslationBundle:Language lang';
+                        $subQuery = 'SELECT COUNT(lang) FROM ObjectBGTranslationBundle:LANGUAGE lang';
                         $queryBuilder->andWhere(sprintf('SIZE(%s.translations) < (%s)', $alias, $subQuery));
                     },
                     'field_type' => 'checkbox',
