@@ -18,7 +18,6 @@ class CRUDController extends BaseCRUDController
             throw new AccessDeniedException();
         }
 
-        $request = $this->getRequest();
         $em = $this->getDoctrine()->getManager();
 
         $languages = $em->createQuery(
@@ -35,8 +34,7 @@ class CRUDController extends BaseCRUDController
             array(
                 'translation_domain' => 'ObjectBGTranslationBundle',
             )
-        )
-            ->setMethod('GET');
+        )->setMethod('GET');
 
         $filterFormBuilder->add(
             'show-only-untranslated',
@@ -118,7 +116,7 @@ class CRUDController extends BaseCRUDController
 
         $form = $formBuilder->getForm();
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $translationsEntities = $em->createQuery(
                 'SELECT translation FROM ObjectBGTranslationBundle:Translation translation INDEX BY translation.id'
             )
@@ -159,12 +157,12 @@ class CRUDController extends BaseCRUDController
 
         $formView = $form->createView();
 
-        $Twig = $this->get('twig');
-        $FormExtension = $Twig->getExtension('form');
-        $FormExtension->renderer->setTheme($formView, $this->admin->getFormTheme());
+        $twig = $this->get('twig');
+        $formExtension = $twig->getExtension('form');
+        $formExtension->renderer->setTheme($formView, $this->admin->getFormTheme());
 
         $filterFormView = $filterForm->createView();
-        $FormExtension->renderer->setTheme($filterFormView, $this->admin->getFilterTheme());
+        $formExtension->renderer->setTheme($filterFormView, $this->admin->getFilterTheme());
 
         return $this->render(
             'ObjectBGTranslationBundle:CRUD:list.html.twig',
