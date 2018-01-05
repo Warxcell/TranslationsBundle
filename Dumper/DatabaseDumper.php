@@ -2,23 +2,23 @@
 
 namespace ObjectBG\TranslationBundle\Dumper;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use ObjectBG\TranslationBundle\Entity\TranslationToken;
+use ObjectBG\TranslationBundle\Entity\TranslationTokenRepository;
 use Symfony\Component\Translation\Dumper\DumperInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 class DatabaseDumper implements DumperInterface
 {
-
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $em;
 
     /**
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
@@ -27,14 +27,12 @@ class DatabaseDumper implements DumperInterface
     {
         $domains = $messages->all();
 
-        $dql = 'SELECT COUNT(token) FROM ObjectBGTranslationBundle:TranslationToken token WHERE token.token = :token AND token.catalogue = :catalogue';
+        /** @var TranslationTokenRepository $translationTokenRepository */
+        $translationTokenRepository = $this->em->getRepository(TranslationToken::class);
 
         foreach ($domains as $catalogue => $messages) {
             foreach ($messages as $token => $val) {
-                $exists = ((int)$this->em->createQuery($dql)
-                        ->setParameter('token', $token)
-                        ->setParameter('catalogue', $catalogue)
-                        ->getSingleScalarResult()) > 0;
+                $exists = $translationTokenRepository->checkIfExists($token, $catalogue);
                 if (!$exists) {
                     $translationToken = new TranslationToken();
                     $translationToken->setToken($token);

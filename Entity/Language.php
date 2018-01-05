@@ -14,7 +14,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Language implements \VM5\EntityTranslationsBundle\Model\Language
 {
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")

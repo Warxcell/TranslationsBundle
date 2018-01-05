@@ -11,7 +11,6 @@ use Sonata\AdminBundle\Route\RouteCollection;
 
 class Translations extends AbstractAdmin
 {
-
     /**
      * The base route name used to generate the routing information
      *

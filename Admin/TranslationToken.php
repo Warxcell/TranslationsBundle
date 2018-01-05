@@ -12,7 +12,6 @@ use Symfony\Component\Form\FormEvents;
 
 class TranslationToken extends AbstractAdmin
 {
-
     /**
      * The base route name used to generate the routing information
      *

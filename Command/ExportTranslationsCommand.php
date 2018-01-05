@@ -17,7 +17,6 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 class ExportTranslationsCommand extends ContainerAwareCommand
 {
-
     /**
      * @var InputInterface
      */
@@ -61,7 +60,7 @@ class ExportTranslationsCommand extends ContainerAwareCommand
         $bundleName = $this->input->getArgument('bundle');
         if ($bundleName) {
             $bundle = $kernel->getBundle($bundleName);
-            $transPaths = $bundle->getPath() . '/Resources/translations';
+            $transPaths = $bundle->getPath().'/Resources/translations';
         }
         $this->exportFile($transPaths, $locale, $format, $clean);
     }
@@ -91,7 +90,7 @@ class ExportTranslationsCommand extends ContainerAwareCommand
         $supportedFormats = $writer->getFormats();
         if (!in_array($format, $supportedFormats)) {
             $this->io->error(
-                array('Wrong output format', 'Supported formats are: ' . implode(', ', $supportedFormats) . '.')
+                array('Wrong output format', 'Supported formats are: '.implode(', ', $supportedFormats).'.')
             );
 
             return 1;

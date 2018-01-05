@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CRUDController extends BaseCRUDController
 {
-
     public function listAction(Request $request = null)
     {
         $canEdit = $this->admin->isGranted('EDIT');
@@ -23,7 +22,7 @@ class CRUDController extends BaseCRUDController
         $em = $this->getDoctrine()->getManager();
 
         $languages = $em->createQuery(
-            'SELECT lang FROM ObjectBGTranslationBundle:Language lang INDEX BY lang.id'
+            'SELECT lang FROM ObjectBGTranslationBundle:LANGUAGE lang INDEX BY lang.id'
         )->getResult();
 
         $qb = $em->createQueryBuilder()

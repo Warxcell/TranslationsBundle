@@ -68,7 +68,7 @@ EOF
         $this->output = $output;
 
         $kernel = $this->getContainer()->get('kernel');
-        $transPaths = array($kernel->getRootDir() . '/Resources/');
+        $transPaths = array($kernel->getRootDir().'/Resources/');
 
         $locale = $this->input->getArgument('locale');
         $override = $this->input->getOption('override');
@@ -77,11 +77,11 @@ EOF
         $bundleName = $this->input->getArgument('bundle');
         if ($bundleName) {
             $bundle = $kernel->getBundle($bundleName);
-            $transPaths[] = $bundle->getPath() . '/Resources/';
+            $transPaths[] = $bundle->getPath().'/Resources/';
             $transPaths[] = sprintf('%s/Resources/%s/', $kernel->getRootDir(), $bundle->getName());
         } elseif ($input->getOption('all')) {
             foreach ($kernel->getBundles() as $bundle) {
-                $transPaths[] = $bundle->getPath() . '/Resources/';
+                $transPaths[] = $bundle->getPath().'/Resources/';
                 $transPaths[] = sprintf('%s/Resources/%s/', $kernel->getRootDir(), $bundle->getName());
             }
         }
@@ -103,7 +103,7 @@ EOF
 
         $currentCatalogue = new MessageCatalogue($locale);
         foreach ($transPaths as $path) {
-            $path = $path . 'translations';
+            $path = $path.'translations';
             if (is_dir($path)) {
                 $loader->loadMessages($path, $currentCatalogue);
             }

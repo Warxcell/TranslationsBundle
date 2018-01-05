@@ -12,7 +12,6 @@ use Doctrine\ORM\Query;
 use Exporter\Exception\InvalidMethodCallException;
 use ObjectBG\TranslationBundle\Entity\Language;
 
-
 /**
  * Description of DoctrineORMQuerySourceIterator
  *

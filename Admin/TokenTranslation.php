@@ -7,7 +7,6 @@ use Sonata\AdminBundle\Form\FormMapper;
 
 class TokenTranslation extends AbstractAdmin
 {
-
     /**
      * The base route name used to generate the routing information
      *

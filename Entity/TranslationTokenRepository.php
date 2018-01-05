@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 class TranslationTokenRepository extends EntityRepository
 {
-    public function checkExist($token, $catalogue)
+    public function checkIfExists($token, $catalogue)
     {
         $em = $this->getEntityManager();
         $dql = 'SELECT COUNT(token) FROM ObjectBGTranslationBundle:TranslationToken token WHERE token.token = :token AND token.catalogue = :catalogue';
@@ -37,7 +37,7 @@ class TranslationTokenRepository extends EntityRepository
     public function getAllTokensByLocale($locale)
     {
         $em = $this->getEntityManager();
-        $dql = 'SELECT token, translation FROM ObjectBGTranslationBundle:TranslationToken token JOIN token.translations translation JOIN translation.language language WITH language.locale = :locale';
+        $dql = 'SELECT token, translation FROM ObjectBGTranslationBundle:TranslationToken token JOIN token.translations translation JOIN translation.language LANGUAGE WITH LANGUAGE.locale = :locale';
         $exists = $em->createQuery($dql)
             ->setParameter('locale', $locale)
             ->getResult();
