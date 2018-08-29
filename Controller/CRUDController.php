@@ -21,12 +21,12 @@ class CRUDController extends BaseCRUDController
         $em = $this->getDoctrine()->getManager();
 
         $languages = $em->createQuery(
-            'SELECT lang FROM ObjectBGTranslationBundle:LANGUAGE lang INDEX BY lang.id'
+            'SELECT lang FROM ObjectBG\TranslationBundle\Entity\Language lang INDEX BY lang.id'
         )->getResult();
 
         $qb = $em->createQueryBuilder()
             ->select('token', 'translation')
-            ->from('ObjectBGTranslationBundle:TranslationToken', 'token', 'token.id')
+            ->from('ObjectBG\TranslationBundle\Entity\TranslationToken', 'token', 'token.id')
             ->leftJoin('token.translations', 'translation');
 
         $filterFormBuilder = $this->createFormBuilder(
