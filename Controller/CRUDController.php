@@ -4,6 +4,9 @@ namespace ObjectBG\TranslationBundle\Controller;
 
 use ObjectBG\TranslationBundle\Entity\Translation;
 use Sonata\AdminBundle\Controller\CRUDController as BaseCRUDController;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,17 +72,17 @@ class CRUDController extends BaseCRUDController
 
         $formBuilder->add(
             'translations',
-            'collection',
+            CollectionType::class,
             array(
-                'type' => 'collection',
+                'entry_type' => CollectionType::class,
                 'disabled' => !$canEdit,
                 'label' => false,
                 'allow_add' => true,
-                'options' => array(
-                    'type' => 'text',
+                'entry_options' => array(
+                    'entry_type' => TextType::class,
                     'label' => false,
                     'required' => false,
-                    'options' => array(
+                    'entry_options' => array(
                         'label' => false,
                     ),
                 ),
@@ -105,7 +108,7 @@ class CRUDController extends BaseCRUDController
         if ($canEdit) {
             $formBuilder->add(
                 'Save',
-                'submit',
+                SubmitType::class,
                 array(
                     'attr' => array(
                         'class' => 'btn btn-primary',
