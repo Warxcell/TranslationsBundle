@@ -2,11 +2,26 @@
 
 namespace ObjectBG\TranslationBundle;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
+use ObjectBG\TranslationBundle\Entity\Translation;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator as OriginalTranslator;
 use Symfony\Component\Translation\MessageCatalogue;
 
 class Translator extends OriginalTranslator
 {
+    /**
+     * @var ManagerRegistry
+     */
+    private $doctrine;
+
+    /**
+     * @param ManagerRegistry $doctrine
+     */
+    public function setDoctrine($doctrine)
+    {
+        $this->doctrine = $doctrine;
+    }
+
     /**
      * @param string $locale
      */
@@ -14,9 +29,8 @@ class Translator extends OriginalTranslator
     {
         parent::loadCatalogue($locale);
 
-        $em = $this->container->get('doctrine.orm.entity_manager');
         /* @var $translationRepository \ObjectBG\TranslationBundle\Repository\Translation */
-        $translationRepository = $em->getRepository("ObjectBGTranslationBundle:Translation");
+        $translationRepository = $this->doctrine->getRepository(Translation::class);
 
         $catalogue = new MessageCatalogue($locale);
 
