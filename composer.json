@@ -1,5 +1,5 @@
 {
-    "name": "arxy/translationbundle",
+    "name": "arxy/translation-bundle",
     "description": "This bundle provides Tranlations (labels) for project. Plug'n'play",
     "type": "symfony-bundle",
     "authors": [
