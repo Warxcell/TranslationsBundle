@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 
-namespace ObjectBG\TranslationBundle;
+namespace Arxy\TranslationBundle;
 
+use Arxy\TranslationBundle\Entity\Translation;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use ObjectBG\TranslationBundle\Entity\Translation;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator as OriginalTranslator;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -29,7 +30,6 @@ class Translator extends OriginalTranslator
     {
         parent::loadCatalogue($locale);
 
-        /* @var $translationRepository \ObjectBG\TranslationBundle\Repository\Translation */
         $translationRepository = $this->doctrine->getRepository(Translation::class);
 
         $catalogue = new MessageCatalogue($locale);

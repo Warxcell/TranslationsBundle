@@ -1,22 +1,17 @@
 <?php
+declare(strict_types=1);
 
-namespace ObjectBG\TranslationBundle\Entity;
+namespace Arxy\TranslationBundle\Entity;
 
+use Arxy\EntityTranslationsBundle\Model\Language;
 use Doctrine\ORM\EntityRepository;
-use ObjectBG\TranslationBundle\Entity\Language as LanguageEntity;
 
 class TranslationRepository extends EntityRepository
 {
-    /**
-     * Return all translations for specified token
-     * @param LanguageEntity $language
-     * @param string $catalogue
-     * @return <Translation>
-     */
-    public function getTranslations(LanguageEntity $language, $catalogue = "messages")
+    public function getTranslations(Language $language, $catalogue = "messages")
     {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT t,token FROM ObjectBGTranslationBundle:Translation t JOIN t.translationToken token WHERE t.language = :language AND token.catalogue = :catalogue"
+            "SELECT t,token FROM ".Translation::class." t JOIN t.translationToken token WHERE t.language = :language AND token.catalogue = :catalogue"
         );
         $query->setParameter("language", $language);
         $query->setParameter("catalogue", $catalogue);
@@ -25,15 +20,10 @@ class TranslationRepository extends EntityRepository
         return $r;
     }
 
-    /**
-     * @param $locale
-     * @param string $catalogue
-     * @return array
-     */
     public function getTranslationsByLocale($locale, $catalogue = "messages")
     {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT t,token,language FROM ObjectBGTranslationBundle:Translation t JOIN t.translationToken token JOIN t.language language WHERE language.locale = :locale AND token.catalogue = :catalogue"
+            "SELECT t,token,language FROM ".Translation::class." t JOIN t.translationToken token JOIN t.language language WHERE language.locale = :locale AND token.catalogue = :catalogue"
         );
         $query->setParameter("locale", $locale);
         $query->setParameter("catalogue", $catalogue);
@@ -49,7 +39,7 @@ class TranslationRepository extends EntityRepository
     public function getAllTranslationsByLocale($locale)
     {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT translation,token,language FROM ObjectBGTranslationBundle:Translation translation JOIN translation.translationToken token JOIN translation.language language WHERE language.locale = :locale"
+            "SELECT translation,token,language FROM ".Translation::class." translation JOIN translation.translationToken token JOIN translation.language language WHERE language.locale = :locale"
         );
         $query->setParameter("locale", $locale);
         $r = $query->getResult();
@@ -58,11 +48,11 @@ class TranslationRepository extends EntityRepository
     }
 
 
-    public function getTranslationByTokenAndLanguage(TranslationToken $translationToken, LanguageEntity $language)
+    public function getTranslationByTokenAndLanguage(TranslationToken $translationToken, Language $language)
     {
 
         $em = $this->getEntityManager();
-        $dql = "SELECT t FROM ObjectBGTranslationBundle:Translation t  WHERE t.translationToken = :token AND t.language = :language";
+        $dql = "SELECT t FROM ".Translation::class." t  WHERE t.translationToken = :token AND t.language = :language";
 
         $exists = $em->createQuery($dql)
             ->setParameter('token', $translationToken)

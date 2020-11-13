@@ -1,29 +1,30 @@
 {
-  "name": "object.bg/translationbundle",
-  "description": "This bundle provides Tranlations (labels) for project. Plug'n'play",
-  "type": "symfony-bundle",
-  "authors": [
-    {
-      "name": "Bozhidar Hristov",
-      "email": "b.hristov@object.bg"
+    "name": "arxy/translationbundle",
+    "description": "This bundle provides Tranlations (labels) for project. Plug'n'play",
+    "type": "symfony-bundle",
+    "authors": [
+        {
+            "name": "Bozhidar Hristov",
+            "email": "warxcell@gmail.com"
+        }
+    ],
+    "keywords": [
+        "lrc",
+        "translation"
+    ],
+    "require": {
+        "php": "~7.4",
+        "doctrine/orm": "~2.5",
+        "arxy/entity-translations-bundle": "~2.0"
+    },
+    "require-dev": {
+        "symfony/framework-bundle": "*",
+        "symfony/translation-contracts": "*",
+        "symfony/translation": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Arxy\\TranslationBundle\\": ""
+        }
     }
-  ],
-  "keywords": [
-    "lrc",
-    "translation"
-  ],
-  "require": {
-    "doctrine/orm": "~2.5",
-    "vm5/entity-translations-bundle": "~2.0"
-  },
-  "require-dev": {
-    "sonata-project/admin-bundle": "~2.2 || ~3.0",
-    "sonata-project/doctrine-orm-admin-bundle": "~2.2 || ~3.0",
-    "symfony/framework-bundle": "~2.4|~3.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "ObjectBG\\TranslationBundle\\": ""
-    }
-  }
 }

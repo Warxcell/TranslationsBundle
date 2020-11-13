@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 
-namespace ObjectBG\TranslationBundle\Command;
+namespace Arxy\TranslationBundle\Command;
 
-use ObjectBG\TranslationBundle\Entity\Language;
-use ObjectBG\TranslationBundle\Entity\TranslationToken;
+use Arxy\TranslationBundle\Entity\Language;
+use Arxy\TranslationBundle\Entity\TranslationToken;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Translation\TranslationLoader;
 use Symfony\Component\Console\Input\InputArgument;
@@ -31,7 +32,7 @@ class ExportTranslationsCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('objectbg:translation:export')
+            ->setName('arxy:translation:export')
             ->setDefinition(
                 array(
                     new InputArgument('locale', InputArgument::REQUIRED, 'The locale'),

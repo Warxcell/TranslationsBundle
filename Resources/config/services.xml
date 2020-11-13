@@ -5,9 +5,9 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="object_bg.translation.dumper.database" class="ObjectBG\TranslationBundle\Dumper\DatabaseDumper">
-            <tag name="translation.dumper" alias="db" />
-            <argument type="service" id="doctrine.orm.entity_manager" />
+        <service id="arxy.translation.dumper.database" class="Arxy\TranslationBundle\Dumper\DatabaseDumper">
+            <tag name="translation.dumper" alias="db"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
     </services>
 </container>

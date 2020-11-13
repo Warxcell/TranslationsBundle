@@ -1,10 +1,11 @@
 <?php
+declare(strict_types=1);
 
-namespace ObjectBG\TranslationBundle\Dumper;
+namespace Arxy\TranslationBundle\Dumper;
 
 use Doctrine\ORM\EntityManagerInterface;
-use ObjectBG\TranslationBundle\Entity\TranslationToken;
-use ObjectBG\TranslationBundle\Entity\TranslationTokenRepository;
+use Arxy\TranslationBundle\Entity\TranslationToken;
+use Arxy\TranslationBundle\Entity\TranslationTokenRepository;
 use Symfony\Component\Translation\Dumper\DumperInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 

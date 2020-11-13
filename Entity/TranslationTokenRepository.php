@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace ObjectBG\TranslationBundle\Entity;
+namespace Arxy\TranslationBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -9,7 +10,7 @@ class TranslationTokenRepository extends EntityRepository
     public function checkIfExists($token, $catalogue)
     {
         $em = $this->getEntityManager();
-        $dql = 'SELECT COUNT(token) FROM ObjectBGTranslationBundle:TranslationToken token WHERE token.token = :token AND token.catalogue = :catalogue';
+        $dql = 'SELECT COUNT(token) FROM '.TranslationToken::class.' token WHERE token.token = :token AND token.catalogue = :catalogue';
 
 
         $exists = ((int)$em->createQuery($dql)
@@ -23,7 +24,7 @@ class TranslationTokenRepository extends EntityRepository
     public function findByTokenAndCatalogue($token, $catalogue)
     {
         $em = $this->getEntityManager();
-        $dql = 'SELECT token FROM ObjectBGTranslationBundle:TranslationToken token WHERE token.token = :token AND token.catalogue = :catalogue';
+        $dql = 'SELECT token FROM '.TranslationToken::class.' token WHERE token.token = :token AND token.catalogue = :catalogue';
 
 
         $exists = $em->createQuery($dql)
@@ -37,7 +38,7 @@ class TranslationTokenRepository extends EntityRepository
     public function getAllTokensByLocale($locale)
     {
         $em = $this->getEntityManager();
-        $dql = 'SELECT token, translation FROM ObjectBGTranslationBundle:TranslationToken token JOIN token.translations translation JOIN translation.language LANGUAGE WITH LANGUAGE.locale = :locale';
+        $dql = 'SELECT token, translation FROM '.TranslationToken::class.' token JOIN token.translations translation JOIN translation.language LANGUAGE WITH LANGUAGE.locale = :locale';
         $exists = $em->createQuery($dql)
             ->setParameter('locale', $locale)
             ->getResult();

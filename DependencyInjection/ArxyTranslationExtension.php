@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace ObjectBG\TranslationBundle\DependencyInjection;
+namespace Arxy\TranslationBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -12,7 +13,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class ObjectBGTranslationExtension extends Extension
+class ArxyTranslationExtension extends Extension
 {
     /**
      * {@inheritDoc}
@@ -24,10 +25,5 @@ class ObjectBGTranslationExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
-
-        $bundles = $container->getParameter('kernel.bundles');
-        if (isset($bundles['SonataAdminBundle'])) {
-            $loader->load('admins.xml');
-        }
     }
 }

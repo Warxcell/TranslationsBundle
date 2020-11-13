@@ -1,12 +1,13 @@
 <?php
+declare(strict_types=1);
 
-namespace ObjectBG\TranslationBundle\Entity;
+namespace Arxy\TranslationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass="ObjectBG\TranslationBundle\Entity\TranslationRepository")
+ * @ORM\Entity(repositoryClass="Arxy\TranslationBundle\Entity\TranslationRepository")
  * @ORM\Table(name="translations",
  *   uniqueConstraints={@Doctrine\ORM\Mapping\UniqueConstraint(columns={"language_id", "translation_token_id"})}
  * )
@@ -70,18 +71,11 @@ class Translation
         $this->translation = $translation;
     }
 
-    /**
-     *
-     * @param \ObjectBG\TranslationBundle\Entity\Language $language
-     */
     public function setLanguage(Language $language)
     {
         $this->language = $language;
     }
 
-    /**
-     * @param \ObjectBG\TranslationBundle\Entity\TranslationToken $translationToken
-     */
     public function setTranslationToken(TranslationToken $translationToken)
     {
         $this->translationToken = $translationToken;
