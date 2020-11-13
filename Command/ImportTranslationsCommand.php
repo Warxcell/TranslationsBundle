@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Arxy\TranslationBundle\Command;
+namespace Arxy\TranslationsBundle\Command;
 
-use Arxy\TranslationBundle\Entity\Language;
-use Arxy\TranslationBundle\Entity\Translation;
-use Arxy\TranslationBundle\Entity\TranslationRepository;
-use Arxy\TranslationBundle\Entity\TranslationToken;
-use Arxy\TranslationBundle\Entity\TranslationTokenRepository;
+use Arxy\TranslationsBundle\Entity\Language;
+use Arxy\TranslationsBundle\Entity\Translation;
+use Arxy\TranslationsBundle\Entity\TranslationRepository;
+use Arxy\TranslationsBundle\Entity\TranslationToken;
+use Arxy\TranslationsBundle\Entity\TranslationTokenRepository;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Translation\TranslationLoader;
 use Symfony\Component\Console\Input\InputArgument;

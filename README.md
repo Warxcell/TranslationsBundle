@@ -1,16 +1,16 @@
-# TranslationBundle
+# TranslationsBundle
 
 Import your translations into database.
 
 ## Installation: 
 ###### it is recommented to install X.Y.* version - This project follow <a target="_blank" href="https://semver.org/">semver</a> - Patch versions will be always compatible with each other. Minor versions may contain minor BC-breaks.
 - composer require object.bg/translationbundle
-- Register bundle in AppKernel.php: `new Arxy\TranslationBundle\ArxyTranslationBundle()`
+- Register bundle in AppKernel.php: `new Arxy\TranslationsBundle\ArxyTranslationsBundle()`
 
 And you are ready to translate. This bundle contains following entities:
 
-`Arxy\TranslationBundle\Entity\TranslationToken` -> `translation_tokens`
-`Arxy\TranslationBundle\Entity\Translation` -> `translations`
+`Arxy\TranslationsBundle\Entity\TranslationToken` -> `translation_tokens`
+`Arxy\TranslationsBundle\Entity\Translation` -> `translations`
 
 If you need to edit translations from admin: you can use SonataAdmin. Bundle will register admins automatically if detects that SonataAdmin is installed.
 

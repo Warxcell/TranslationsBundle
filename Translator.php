@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Arxy\TranslationBundle;
+namespace Arxy\TranslationsBundle;
 
-use Arxy\TranslationBundle\Entity\Translation;
+use Arxy\TranslationsBundle\Entity\Translation;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator as OriginalTranslator;
 use Symfony\Component\Translation\MessageCatalogue;

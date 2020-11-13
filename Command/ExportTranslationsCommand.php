@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Arxy\TranslationBundle\Command;
+namespace Arxy\TranslationsBundle\Command;
 
-use Arxy\TranslationBundle\Entity\Language;
-use Arxy\TranslationBundle\Entity\TranslationToken;
+use Arxy\TranslationsBundle\Entity\Language;
+use Arxy\TranslationsBundle\Entity\TranslationToken;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Translation\TranslationLoader;
 use Symfony\Component\Console\Input\InputArgument;

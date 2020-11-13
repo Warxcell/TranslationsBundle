@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Arxy\TranslationBundle\Entity;
+namespace Arxy\TranslationsBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Arxy\TranslationBundle\DependencyInjection;
+namespace Arxy\TranslationsBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

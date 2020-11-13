@@ -1,5 +1,5 @@
 {
-    "name": "arxy/translation-bundle",
+    "name": "arxy/translations-bundle",
     "description": "This bundle provides Tranlations (labels) for project. Plug'n'play",
     "type": "symfony-bundle",
     "authors": [
@@ -24,7 +24,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Arxy\\TranslationBundle\\": ""
+            "Arxy\\TranslationsBundle\\": ""
         }
     }
 }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Arxy\TranslationBundle\Model;
+namespace Arxy\TranslationsBundle\Model;
 
 interface Language
 {

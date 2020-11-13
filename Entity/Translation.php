@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Arxy\TranslationBundle\Entity;
+namespace Arxy\TranslationsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass="Arxy\TranslationBundle\Entity\TranslationRepository")
+ * @ORM\Entity(repositoryClass="Arxy\TranslationsBundle\Entity\TranslationRepository")
  * @ORM\Table(name="translations",
  *   uniqueConstraints={@Doctrine\ORM\Mapping\UniqueConstraint(columns={"language_id", "translation_token_id"})}
  * )

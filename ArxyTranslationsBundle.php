@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Arxy\TranslationBundle;
+namespace Arxy\TranslationsBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class ArxyTranslationBundle extends Bundle
+class ArxyTranslationsBundle extends Bundle
 {
 }
