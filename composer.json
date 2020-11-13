@@ -14,8 +14,7 @@
     ],
     "require": {
         "php": "~7.4",
-        "doctrine/orm": "~2.5",
-        "arxy/entity-translations-bundle": "~3.0"
+        "doctrine/orm": "~2.5"
     },
     "require-dev": {
         "symfony/framework-bundle": "*",
