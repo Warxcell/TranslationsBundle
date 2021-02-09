@@ -3,24 +3,19 @@ declare(strict_types=1);
 
 namespace Arxy\TranslationsBundle;
 
-use Arxy\TranslationsBundle\Entity\Translation;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator as OriginalTranslator;
 use Symfony\Component\Translation\MessageCatalogue;
 
 class Translator extends OriginalTranslator
 {
-    /**
-     * @var ManagerRegistry
-     */
-    private $doctrine;
+    private Repository $repository;
 
     /**
-     * @param ManagerRegistry $doctrine
+     * @required
      */
-    public function setDoctrine($doctrine)
+    public function setRepository(Repository $repository): void
     {
-        $this->doctrine = $doctrine;
+        $this->repository = $repository;
     }
 
     /**
@@ -30,16 +25,14 @@ class Translator extends OriginalTranslator
     {
         parent::loadCatalogue($locale);
 
-        $translationRepository = $this->doctrine->getRepository(Translation::class);
-
         $catalogue = new MessageCatalogue($locale);
 
-        $translations = $translationRepository->getAllTranslationsByLocale($locale);
+        $translations = $this->repository->findByLocale($locale);
         foreach ($translations as $translation) {
             $catalogue->set(
-                $translation->getTranslationToken()->getToken(),
+                $translation->getToken(),
                 $translation->getTranslation(),
-                $translation->getTranslationToken()->getCatalogue()
+                $translation->getCatalogue()
             );
         }
 

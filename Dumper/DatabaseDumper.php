@@ -5,43 +5,21 @@ namespace Arxy\TranslationsBundle\Dumper;
 
 use Arxy\TranslationsBundle\Entity\TranslationToken;
 use Arxy\TranslationsBundle\Entity\TranslationTokenRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use Arxy\TranslationsBundle\Repository;
 use Symfony\Component\Translation\Dumper\DumperInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 class DatabaseDumper implements DumperInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private Repository $repository;
 
-    /**
-     * @param EntityManagerInterface $em
-     */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(Repository $repository)
     {
-        $this->em = $em;
+        $this->repository = $repository;
     }
 
     public function dump(MessageCatalogue $messages, $options = array())
     {
-        $domains = $messages->all();
-
-        /** @var TranslationTokenRepository $translationTokenRepository */
-        $translationTokenRepository = $this->em->getRepository(TranslationToken::class);
-
-        foreach ($domains as $catalogue => $messages) {
-            foreach ($messages as $token => $val) {
-                $exists = $translationTokenRepository->checkIfExists($token, $catalogue);
-                if (!$exists) {
-                    $translationToken = new TranslationToken();
-                    $translationToken->setToken($token);
-                    $translationToken->setCatalogue($catalogue);
-                    $this->em->persist($translationToken);
-                }
-            }
-        }
-        $this->em->flush();
+        $this->repository->persistCatalogue($messages);
     }
 }
