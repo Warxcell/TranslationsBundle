@@ -30,15 +30,16 @@ class Translator extends OriginalTranslator
         // Prevents SQLSTATE[HY000] [1049] Unknown database when clearing cache, because Symfony caches the translations
         try {
             $translations = $this->repository->findByLocale($locale);
+
+            foreach ($translations as $translation) {
+                $catalogue->set(
+                    $translation->getToken(),
+                    $translation->getTranslation(),
+                    $translation->getCatalogue()
+                );
+            }
         } catch (\Exception $exception) {
             return;
-        }
-        foreach ($translations as $translation) {
-            $catalogue->set(
-                $translation->getToken(),
-                $translation->getTranslation(),
-                $translation->getCatalogue()
-            );
         }
 
         $this->catalogues[$locale]->addCatalogue($catalogue);
