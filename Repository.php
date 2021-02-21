@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Arxy\TranslationsBundle;
 
-use Arxy\TranslationsBundle\Entity\Translation;
+use Arxy\TranslationsBundle\Model\Translation;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 interface Repository
