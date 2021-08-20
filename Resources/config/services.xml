@@ -5,7 +5,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="arxy.translation.dumper.database" class="Arxy\TranslationsBundle\Dumper\DatabaseDumper">
+        <service id="Arxy\TranslationsBundle\Dumper\DatabaseDumper">
             <tag name="translation.dumper" alias="db"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>

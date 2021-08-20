@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Arxy\TranslationsBundle\Dumper;
@@ -18,7 +19,7 @@ class DatabaseDumper implements DumperInterface
         $this->repository = $repository;
     }
 
-    public function dump(MessageCatalogue $messages, $options = array())
+    public function dump(MessageCatalogue $messages, $options = [])
     {
         $this->repository->persistCatalogue($messages);
     }
