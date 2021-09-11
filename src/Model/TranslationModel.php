@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Arxy\TranslationsBundle\Tests\Integration\Entity;
+namespace Arxy\TranslationsBundle\Model;
 
-use Arxy\TranslationsBundle\Model\Translation;
-
+/**
+ * Lightweight DTO to avoid heavy hydrating of ORM
+ */
 class TranslationModel implements Translation
 {
     private string $translation;

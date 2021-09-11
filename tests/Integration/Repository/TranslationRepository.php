@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Arxy\TranslationsBundle\Tests\Integration\Repository;
 
+use Arxy\TranslationsBundle\Model\TranslationModel;
 use Arxy\TranslationsBundle\Repository;
 use Arxy\TranslationsBundle\Tests\Integration\Entity\Language;
 use Arxy\TranslationsBundle\Tests\Integration\Entity\Token;
 use Arxy\TranslationsBundle\Tests\Integration\Entity\Translation;
-use Arxy\TranslationsBundle\Tests\Integration\Entity\TranslationModel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
