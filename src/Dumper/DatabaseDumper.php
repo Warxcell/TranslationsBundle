@@ -17,7 +17,7 @@ class DatabaseDumper implements DumperInterface
         $this->repository = $repository;
     }
 
-    public function dump(MessageCatalogue $messages, $options = [])
+    public function dump(MessageCatalogue $messages, $options = []): void
     {
         $this->repository->persistCatalogue($messages);
     }

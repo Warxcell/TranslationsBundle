@@ -29,4 +29,3 @@ class Kernel extends SymfonyBaseKernel
         $loader->load(__DIR__ . '/config.yml');
     }
 }
-

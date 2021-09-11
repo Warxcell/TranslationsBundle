@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Arxy\TranslationsBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -25,9 +27,14 @@ class Configuration implements ConfigurationInterface
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
 
+        /** @var ArrayNodeDefinition $root */
         $root = $treeBuilder->getRootNode();
 
         // @formatter:off
+        /**
+         * @psalm-suppress PossiblyNullReference
+         * @psalm-suppress PossiblyUndefinedMethod
+         */
         $root->children()
                 ->scalarNode('repository')->isRequired()->cannotBeEmpty()->end()
               ->end();

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Arxy\TranslationsBundle;
 
 use Exception;
+use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator as OriginalTranslator;
+use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 class Translator extends OriginalTranslator
@@ -13,17 +15,25 @@ class Translator extends OriginalTranslator
     private Repository $repository;
 
     /**
-     * @required
+     * @phpcsSuppress PEAR.Functions.ValidDefaultValue
      */
-    public function setRepository(Repository $repository): void
-    {
+    public function __construct(
+        ContainerInterface $container,
+        MessageFormatterInterface $formatter,
+        string $defaultLocale,
+        array $loaderIds = [],
+        array $options = [],
+        array $enabledLocales = [],
+        Repository $repository
+    ) {
+        parent::__construct($container, $formatter, $defaultLocale, $loaderIds, $options, $enabledLocales);
         $this->repository = $repository;
     }
 
     /**
      * @param string $locale
      */
-    protected function loadCatalogue($locale)
+    protected function loadCatalogue($locale): void
     {
         parent::loadCatalogue($locale);
 
@@ -46,7 +56,7 @@ class Translator extends OriginalTranslator
         $this->loadFallbackCatalogues($locale);
     }
 
-    private function loadFallbackCatalogues($locale)
+    private function loadFallbackCatalogues(string $locale): void
     {
         $current = $this->catalogues[$locale];
 

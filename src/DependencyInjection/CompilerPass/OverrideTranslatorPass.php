@@ -15,10 +15,10 @@ class OverrideTranslatorPass implements CompilerPassInterface
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $container->getDefinition('translator.default')
             ->setClass(Translator::class)
-            ->addMethodCall('setRepository', [new Reference(Repository::class)]);
+            ->setArgument('$repository', new Reference(Repository::class));
     }
 }
