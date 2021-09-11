@@ -10,6 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator as OriginalTranslator;
 use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * @internal
+ */
 class Translator extends OriginalTranslator
 {
     private Repository $repository;
@@ -30,10 +33,7 @@ class Translator extends OriginalTranslator
         $this->repository = $repository;
     }
 
-    /**
-     * @param string $locale
-     */
-    protected function loadCatalogue($locale): void
+    protected function loadCatalogue(string $locale): void
     {
         parent::loadCatalogue($locale);
 

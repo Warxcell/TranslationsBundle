@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslatorTest extends KernelTestCase
@@ -21,7 +22,7 @@ class TranslatorTest extends KernelTestCase
         return Kernel::class;
     }
 
-    private function buildDb($kernel): void
+    private function buildDb(KernelInterface $kernel): void
     {
         $application = new Application($kernel);
         $application->setAutoExit(false);
@@ -42,6 +43,7 @@ class TranslatorTest extends KernelTestCase
         yield 'Translation' => ['Здравей, свят!', 'hello_world', [], 'messages', 'bg'];
         yield 'Non DB Translation' => ['Това идва от messages.bg.yml', 'non_db_translation', [], 'messages', 'bg'];
         yield 'Fallback' => ['How is it?', 'how_is_it', [], 'messages', 'bg'];
+        yield 'Second fallback' => ['This message is in NL', 'second_fallback', [], 'messages', 'bg'];
         yield 'Placeholder' => ['Hello, Gosho', 'hello_user', ['%name%' => 'Gosho'], 'messages', 'en'];
         yield 'Placeholder, non-default catalogue' => [
             'User Gosho is wrong!',
@@ -76,8 +78,13 @@ class TranslatorTest extends KernelTestCase
     /**
      * @dataProvider translateDataProvider
      */
-    public function testTranslate(string $expected, string $token, array $parameters, string $catalogue, string $locale)
-    {
+    public function testTranslate(
+        string $expected,
+        string $token,
+        array $parameters,
+        string $catalogue,
+        string $locale
+    ): void {
         $kernel = self::bootKernel();
         $this->buildDb($kernel);
 
@@ -90,7 +97,13 @@ class TranslatorTest extends KernelTestCase
         $en = new Language('en');
         $entityManager->persist($en);
 
+        $nl = new Language('nl');
+        $entityManager->persist($nl);
+
         $entityManager->persist(new Translation($bg, new Token('hello_world', 'messages'), 'Здравей, свят!'));
+        $entityManager->persist(
+            new Translation($nl, new Token('second_fallback', 'messages'), 'This message is in NL')
+        );
         $entityManager->persist(new Translation($en, new Token('how_is_it', 'messages'), 'How is it?'));
         $entityManager->persist(new Translation($en, new Token('hello_user', 'messages'), 'Hello, %name%'));
         $entityManager->persist(new Translation($en, new Token('wrong_user', 'validators'), 'User %user% is wrong!'));
@@ -112,7 +125,7 @@ class TranslatorTest extends KernelTestCase
     /**
      * When Symfony clear cache, tables might not be created, no exception should be thrown in that case.
      */
-    public function testCacheClear()
+    public function testCacheClear(): void
     {
         $kernel = self::bootKernel();
 

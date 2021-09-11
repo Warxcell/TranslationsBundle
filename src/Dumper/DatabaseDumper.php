@@ -8,6 +8,9 @@ use Arxy\TranslationsBundle\Repository;
 use Symfony\Component\Translation\Dumper\DumperInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * @internal
+ */
 class DatabaseDumper implements DumperInterface
 {
     private Repository $repository;
