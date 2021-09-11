@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Arxy\TranslationsBundle;
 
-use Exception;
+use Doctrine\DBAL\Exception\DatabaseObjectNotFoundException;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator as OriginalTranslator;
 use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
@@ -40,7 +40,7 @@ class Translator extends OriginalTranslator
         // Prevents SQLSTATE[HY000] [1049] Unknown database when clearing cache, because Symfony caches the translations
         try {
             $translations = $this->repository->findByLocale($locale);
-        } catch (Exception $exception) {
+        } catch (DatabaseObjectNotFoundException $exception) {
             return;
         }
 
