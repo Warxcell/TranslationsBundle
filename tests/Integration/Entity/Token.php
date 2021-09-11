@@ -59,16 +59,4 @@ class Token
     {
         return $this->translations;
     }
-
-    public function addTranslation(Translation $translation): void
-    {
-        $this->translations->add($translation);
-        $translation->setToken($this);
-    }
-
-    public function removeTranslation(Translation $translation): void
-    {
-        $this->translations->removeElement($translation);
-        $translation->setToken(null);
-    }
 }
