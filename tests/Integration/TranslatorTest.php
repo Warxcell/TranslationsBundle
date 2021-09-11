@@ -40,6 +40,7 @@ class TranslatorTest extends KernelTestCase
     public function translateDataProvider(): iterable
     {
         yield 'Translation' => ['Здравей, свят!', 'hello_world', [], 'messages', 'bg'];
+        yield 'Non DB Translation' => ['Това идва от messages.bg.yml', 'non_db_translation', [], 'messages', 'bg'];
         yield 'Fallback' => ['How is it?', 'how_is_it', [], 'messages', 'bg'];
         yield 'Placeholder' => ['Hello, Gosho', 'hello_user', ['%name%' => 'Gosho'], 'messages', 'en'];
         yield 'Placeholder, non-default catalogue' => [
