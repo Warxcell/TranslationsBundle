@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Arxy\TranslationsBundle;
@@ -26,8 +27,6 @@ class Translator extends OriginalTranslator
     {
         parent::loadCatalogue($locale);
 
-        $catalogue = new MessageCatalogue($locale);
-
         // Prevents SQLSTATE[HY000] [1049] Unknown database when clearing cache, because Symfony caches the translations
         try {
             $translations = $this->repository->findByLocale($locale);
@@ -35,6 +34,7 @@ class Translator extends OriginalTranslator
             return;
         }
 
+        $catalogue = $this->catalogues[$locale];
         foreach ($translations as $translation) {
             $catalogue->set(
                 $translation->getToken(),
@@ -42,8 +42,6 @@ class Translator extends OriginalTranslator
                 $translation->getCatalogue()
             );
         }
-
-        $this->catalogues[$locale]->addCatalogue($catalogue);
 
         $this->loadFallbackCatalogues($locale);
     }

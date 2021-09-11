@@ -25,6 +25,14 @@ class Configuration implements ConfigurationInterface
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
 
+        $root = $treeBuilder->getRootNode();
+
+        // @formatter:off
+        $root->children()
+                ->scalarNode('repository')->isRequired()->cannotBeEmpty()->end()
+              ->end();
+        // @formatter:on
+
         return $treeBuilder;
     }
 }
