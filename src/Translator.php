@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Arxy\TranslationsBundle;
 
 use Doctrine\DBAL\Exception\DatabaseObjectNotFoundException;
-use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator as OriginalTranslator;
-use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
@@ -18,18 +16,10 @@ class Translator extends OriginalTranslator
     private Repository $repository;
 
     /**
-     * @phpcsSuppress PEAR.Functions.ValidDefaultValue
+     * @required
      */
-    public function __construct(
-        ContainerInterface $container,
-        MessageFormatterInterface $formatter,
-        string $defaultLocale,
-        array $loaderIds = [],
-        array $options = [],
-        array $enabledLocales = [],
-        Repository $repository
-    ) {
-        parent::__construct($container, $formatter, $defaultLocale, $loaderIds, $options, $enabledLocales);
+    public function setRepository(Repository $repository): void
+    {
         $this->repository = $repository;
     }
 

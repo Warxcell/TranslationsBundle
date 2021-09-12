@@ -19,6 +19,6 @@ class OverrideTranslatorPass implements CompilerPassInterface
     {
         $container->getDefinition('translator.default')
             ->setClass(Translator::class)
-            ->setArgument('$repository', new Reference(Repository::class));
+            ->addMethodCall('setRepository', [new Reference(Repository::class)]);
     }
 }
