@@ -14,6 +14,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class TranslationRepository extends ServiceEntityRepository implements Repository
@@ -35,7 +36,7 @@ class TranslationRepository extends ServiceEntityRepository implements Repositor
         return $query->toIterable();
     }
 
-    private function exists($token, $catalogue): bool
+    private function exists(string $token, string $catalogue): bool
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('1')

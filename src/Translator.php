@@ -8,7 +8,7 @@ use Doctrine\DBAL\Exception\DatabaseObjectNotFoundException;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator as OriginalTranslator;
 use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
-use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * @internal
@@ -37,13 +37,12 @@ class Translator extends OriginalTranslator
     {
         parent::loadCatalogue($locale);
 
-        // Prevents SQLSTATE[HY000] [1049] Unknown database when clearing cache, because Symfony caches the translations
         try {
             $translations = $this->repository->findByLocale($locale);
         } catch (DatabaseObjectNotFoundException $exception) {
+            // Prevents SQLSTATE[HY000] [1049] Unknown database when clearing cache, because Symfony caches the translations
             return;
         }
-
         $catalogue = $this->catalogues[$locale];
         foreach ($translations as $translation) {
             $catalogue->set(
@@ -52,25 +51,21 @@ class Translator extends OriginalTranslator
                 $translation->getCatalogue()
             );
         }
-
-        $this->loadFallbackCatalogues($locale);
+        $this->loadFallbackTranslations($catalogue);
     }
 
-    private function loadFallbackCatalogues(string $locale): void
+    private function loadFallbackTranslations(MessageCatalogueInterface $catalogue): void
     {
-        $current = $this->catalogues[$locale];
+        while (($catalogue = $catalogue->getFallbackCatalogue()) !== null) {
+            $translations = $this->repository->findByLocale($catalogue->getLocale());
 
-        foreach ($this->computeFallbackLocales($locale) as $fallback) {
-            if (!isset($this->catalogues[$fallback])) {
-                $this->loadCatalogue($fallback);
+            foreach ($translations as $translation) {
+                $catalogue->set(
+                    $translation->getToken(),
+                    $translation->getTranslation(),
+                    $translation->getCatalogue()
+                );
             }
-
-            $fallbackCatalogue = new MessageCatalogue($fallback, $this->catalogues[$fallback]->all());
-            foreach ($this->catalogues[$fallback]->getResources() as $resource) {
-                $fallbackCatalogue->addResource($resource);
-            }
-            $current->addFallbackCatalogue($fallbackCatalogue);
-            $current = $fallbackCatalogue;
         }
     }
 }
