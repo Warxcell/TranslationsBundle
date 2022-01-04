@@ -11,7 +11,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 /**
  * @internal
  */
-class DatabaseDumper implements DumperInterface
+final class DatabaseDumper implements DumperInterface
 {
     private Repository $repository;
 

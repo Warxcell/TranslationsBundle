@@ -6,6 +6,7 @@
 
     <services>
         <service id="Arxy\TranslationsBundle\Dumper\DatabaseDumper">
+            <argument type="service" id="Arxy\TranslationsBundle\Repository"/>
             <tag name="translation.dumper" alias="db"/>
         </service>
     </services>
