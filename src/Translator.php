@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Arxy\TranslationsBundle;
 
-use Doctrine\DBAL\Exception\DatabaseObjectNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator as OriginalTranslator;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
@@ -14,6 +13,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 class Translator extends OriginalTranslator
 {
     private Repository $repository;
+    private bool $warmUp = false;
 
     /**
      * @required
@@ -27,12 +27,12 @@ class Translator extends OriginalTranslator
     {
         parent::loadCatalogue($locale);
 
-        try {
-            $translations = $this->repository->findByLocale($locale);
-        } catch (DatabaseObjectNotFoundException $exception) {
-            // Prevents SQLSTATE[HY000] [1049] Unknown database when clearing cache, because Symfony caches the translations
+        if ($this->warmUp) {
+            // do not load translations from database during warmup.
             return;
         }
+
+        $translations = $this->repository->findByLocale($locale);
         $catalogue = $this->catalogues[$locale];
         foreach ($translations as $translation) {
             $catalogue->set(
@@ -56,6 +56,16 @@ class Translator extends OriginalTranslator
                     $translation->getCatalogue()
                 );
             }
+        }
+    }
+
+    public function warmUp(string $cacheDir)
+    {
+        $this->warmUp = true;
+        try {
+            return parent::warmUp($cacheDir);
+        } finally {
+            $this->warmUp = false;
         }
     }
 }
