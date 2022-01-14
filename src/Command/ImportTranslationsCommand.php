@@ -27,9 +27,8 @@ class ImportTranslationsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        foreach ($this->translatorBag->getCatalogues() as $catalogue) {
-            $this->repository->persistCatalogue($catalogue);
-        }
+        $this->repository->persistCatalogue($this->translatorBag->getCatalogue());
+        $output->writeln('Imported catalogue');
 
         return 0;
     }
