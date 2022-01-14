@@ -12,6 +12,9 @@ use Symfony\Component\Translation\TranslatorBagInterface;
 
 class ImportTranslationsCommand extends Command
 {
+    protected static $defaultName = 'arxy:translations:import-translations';
+    protected static $defaultDescription = 'Import translations into database';
+
     private Repository $repository;
     private TranslatorBagInterface $translatorBag;
 
