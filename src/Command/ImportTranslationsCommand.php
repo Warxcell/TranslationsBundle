@@ -6,8 +6,7 @@ namespace Arxy\TranslationsBundle\Command;
 
 use Arxy\TranslationsBundle\Model\Language;
 use Arxy\TranslationsBundle\Repository;
-use Doctrine\Persistence\ManagerRegistry;
-use RuntimeException;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,26 +19,22 @@ class ImportTranslationsCommand extends Command
 
     private Repository $repository;
     private TranslatorBagInterface $translatorBag;
-    private ManagerRegistry $managerRegistry;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(
         Repository $repository,
         TranslatorBagInterface $translatorBag,
-        ManagerRegistry $managerRegistry
+        EntityManagerInterface $entityManager
     ) {
         parent::__construct();
         $this->repository = $repository;
         $this->translatorBag = $translatorBag;
-        $this->managerRegistry = $managerRegistry;
+        $this->entityManager = $entityManager;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $manager = $this->managerRegistry->getManagerForClass(Language::class);
-        if ($manager === null) {
-            throw new RuntimeException('No manager found for ' . Language::class);
-        }
-        $repository = $manager->getRepository(Language::class);
+        $repository = $this->entityManager->getRepository(Language::class);
 
         /** @var Language[] $languages */
         $languages = $repository->findAll();
