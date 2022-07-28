@@ -19,6 +19,7 @@ class OverrideTranslatorPass implements CompilerPassInterface
     {
         $container->getDefinition('translator.default')
             ->setClass(Translator::class)
+            ->addTag('kernel.reset', ['method' => 'reset'])
             ->addMethodCall('setRepository', [new Reference(Repository::class)]);
     }
 }

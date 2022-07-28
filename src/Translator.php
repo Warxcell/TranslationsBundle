@@ -6,11 +6,12 @@ namespace Arxy\TranslationsBundle;
 
 use Symfony\Bundle\FrameworkBundle\Translation\Translator as OriginalTranslator;
 use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * @internal
  */
-class Translator extends OriginalTranslator
+class Translator extends OriginalTranslator implements ResetInterface
 {
     private Repository $repository;
     private bool $warmUp = false;
@@ -32,6 +33,11 @@ class Translator extends OriginalTranslator
             return;
         }
 
+        $this->fetchTranslations($locale);
+    }
+
+    private function fetchTranslations(string $locale)
+    {
         $translations = $this->repository->findByLocale($locale);
         $catalogue = $this->catalogues[$locale];
         foreach ($translations as $translation) {
@@ -42,6 +48,11 @@ class Translator extends OriginalTranslator
             );
         }
         $this->loadFallbackTranslations($catalogue);
+    }
+
+    public function reset(): void
+    {
+        $this->fetchTranslations($this->getLocale());
     }
 
     private function loadFallbackTranslations(MessageCatalogueInterface $catalogue): void
