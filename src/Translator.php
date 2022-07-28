@@ -36,7 +36,7 @@ class Translator extends OriginalTranslator implements ResetInterface
         $this->fetchTranslations($locale);
     }
 
-    private function fetchTranslations(string $locale)
+    private function fetchTranslations(string $locale): void
     {
         $translations = $this->repository->findByLocale($locale);
         $catalogue = $this->catalogues[$locale];
@@ -50,16 +50,25 @@ class Translator extends OriginalTranslator implements ResetInterface
         $this->loadFallbackTranslations($catalogue);
     }
 
-    public function reset(): void
-    {
-        $this->fetchTranslations($this->getLocale());
-    }
-
     private function loadFallbackTranslations(MessageCatalogueInterface $catalogue): void
     {
         while (($catalogue = $catalogue->getFallbackCatalogue()) !== null) {
             $translations = $this->repository->findByLocale($catalogue->getLocale());
 
+            foreach ($translations as $translation) {
+                $catalogue->set(
+                    $translation->getToken(),
+                    $translation->getTranslation(),
+                    $translation->getCatalogue()
+                );
+            }
+        }
+    }
+
+    public function reset(): void
+    {
+        foreach ($this->catalogues as $locale => $catalogue) {
+            $translations = $this->repository->findByLocale($locale);
             foreach ($translations as $translation) {
                 $catalogue->set(
                     $translation->getToken(),
