@@ -79,7 +79,7 @@ class Translator extends OriginalTranslator implements ResetInterface
         }
     }
 
-    public function warmUp(string $cacheDir)
+    public function warmUp(string $cacheDir): array
     {
         $this->warmUp = true;
         try {
