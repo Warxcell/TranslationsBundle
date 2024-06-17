@@ -13,7 +13,11 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class Translator extends OriginalTranslator implements ResetInterface
 {
-    private Repository $repository;
+    private Repository|null $repository = null;
+
+    private CacheFlag|null $cacheFlag = null;
+
+    private int $version = 0;
     private bool $warmUp = false;
 
     /**
@@ -22,6 +26,14 @@ class Translator extends OriginalTranslator implements ResetInterface
     public function setRepository(Repository $repository): void
     {
         $this->repository = $repository;
+    }
+
+    /**
+     * @required
+     */
+    public function setCacheFlag(CacheFlag $cacheFlag): void
+    {
+        $this->cacheFlag = $cacheFlag;
     }
 
     protected function loadCatalogue(string $locale): void
@@ -38,7 +50,7 @@ class Translator extends OriginalTranslator implements ResetInterface
 
     private function fetchTranslations(string $locale): void
     {
-        $translations = $this->repository->findByLocale($locale);
+        $translations = $this->repository?->findByLocale($locale) ?? [];
         $catalogue = $this->catalogues[$locale];
         foreach ($translations as $translation) {
             $catalogue->set(
@@ -67,6 +79,11 @@ class Translator extends OriginalTranslator implements ResetInterface
 
     public function reset(): void
     {
+        $version = $this->cacheFlag?->getVersion();
+        if ($version?->get() === $this->version) {
+            return;
+        }
+
         foreach ($this->catalogues as $locale => $catalogue) {
             $translations = $this->repository->findByLocale($locale);
             foreach ($translations as $translation) {
@@ -77,6 +94,7 @@ class Translator extends OriginalTranslator implements ResetInterface
                 );
             }
         }
+        $this->version = $version->get();
     }
 
     public function warmUp(string $cacheDir): array

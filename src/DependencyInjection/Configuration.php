@@ -14,7 +14,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
  */
-class Configuration implements ConfigurationInterface
+final readonly class Configuration implements ConfigurationInterface
 {
     /**
      * {@inheritDoc}
@@ -37,6 +37,7 @@ class Configuration implements ConfigurationInterface
          */
         $root->children()
                 ->scalarNode('repository')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('cache_flag')->isRequired()->cannotBeEmpty()->end()
               ->end();
         // @formatter:on
 

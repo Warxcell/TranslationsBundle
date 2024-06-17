@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Arxy\TranslationsBundle\DependencyInjection;
 
+use Arxy\TranslationsBundle\CacheFlag;
 use Arxy\TranslationsBundle\Repository;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -25,9 +27,10 @@ class ArxyTranslationsExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
+        $loader = new Loader\PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.php');
 
         $container->setAlias(Repository::class, $config['repository']);
+        $container->getDefinition(CacheFlag::class)->setArgument('$cache', new Reference($config['cache_flag']));
     }
 }

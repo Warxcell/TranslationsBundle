@@ -7,7 +7,7 @@ namespace Arxy\TranslationsBundle\Model;
 /**
  * Lightweight DTO to avoid heavy hydrating of ORM
  */
-class TranslationModel implements Translation
+final readonly class TranslationModel implements Translation
 {
     private string $translation;
     private string $token;

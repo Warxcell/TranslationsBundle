@@ -11,13 +11,11 @@ use Symfony\Component\Translation\MessageCatalogue;
 /**
  * @internal
  */
-final class DatabaseDumper implements DumperInterface
+final readonly class DatabaseDumper implements DumperInterface
 {
-    private Repository $repository;
-
-    public function __construct(Repository $repository)
-    {
-        $this->repository = $repository;
+    public function __construct(
+        private Repository $repository
+    ) {
     }
 
     public function dump(MessageCatalogue $messages, $options = []): void
