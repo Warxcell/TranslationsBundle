@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Arxy\TranslationsBundle\Tests\Integration;
 
+use Arxy\TranslationsBundle\CacheFlag;
 use Arxy\TranslationsBundle\Tests\Integration\Entity\Language;
 use Arxy\TranslationsBundle\Tests\Integration\Entity\Token;
 use Arxy\TranslationsBundle\Tests\Integration\Entity\Translation;
@@ -11,8 +12,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslatorTest extends KernelTestCase
@@ -34,7 +36,7 @@ class TranslatorTest extends KernelTestCase
                     'doctrine:schema:create',
                 ]
             ),
-            new ConsoleOutput()
+            new NullOutput()
         );
     }
 
@@ -122,6 +124,59 @@ class TranslatorTest extends KernelTestCase
         self::assertSame($expected, $translator->trans($token, $parameters, $catalogue, $locale));
     }
 
+    public function testCacheFlag(): void
+    {
+        $kernel = self::bootKernel();
+        $this->buildDb($kernel);
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+
+        $bg = new Language('bg');
+        $entityManager->persist($bg);
+
+        $en = new Language('en');
+        $entityManager->persist($en);
+
+        $helloWorldInBg = new Translation($bg, new Token('hello_world', 'messages'), 'Здравей, свят!');
+        $helloWorldInEn = new Translation($en, new Token('hello_world', 'messages'), 'Hello, world!');
+        $entityManager->persist($helloWorldInBg);
+        $entityManager->persist($helloWorldInEn);
+        $entityManager->flush();
+
+        /** @var TranslatorInterface $translator */
+        $translator = static::getContainer()->get(TranslatorInterface::class);
+
+        self::assertSame('Здравей, свят!', $translator->trans('hello_world', locale: 'bg'));
+        self::assertSame('Hello, world!', $translator->trans('hello_world', locale: 'en'));
+
+        $helloWorldInBg->setTranslation('Здравей, свят! редактирано');
+        $entityManager->persist($helloWorldInBg);
+        $entityManager->flush();
+
+        $helloWorldInEn->setTranslation('Hello, world! Edited');
+        $entityManager->persist($helloWorldInEn);
+        $entityManager->flush();
+
+        if ($translator instanceof ResetInterface) {
+            $translator->reset();
+        }
+
+        self::assertSame('Здравей, свят!', $translator->trans('hello_world', locale: 'bg'));
+        self::assertSame('Hello, world!', $translator->trans('hello_world', locale: 'en'));
+
+        /** @var CacheFlag $cacheFlag */
+        $cacheFlag = static::getContainer()->get(CacheFlag::class);
+        $cacheFlag->increment($cacheFlag->getVersion());
+
+        if ($translator instanceof ResetInterface) {
+            $translator->reset();
+        }
+
+        self::assertSame('Здравей, свят! редактирано', $translator->trans('hello_world', locale: 'bg'));
+        self::assertSame('Hello, world! Edited', $translator->trans('hello_world', locale: 'en'));
+    }
+
     /**
      * When Symfony clear cache, tables might not be created, no exception should be thrown in that case.
      */
@@ -139,7 +194,7 @@ class TranslatorTest extends KernelTestCase
                     'cache:clear',
                 ]
             ),
-            new ConsoleOutput()
+            new NullOutput()
         );
         $this->expectNotToPerformAssertions();
     }

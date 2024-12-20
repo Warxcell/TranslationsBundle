@@ -97,7 +97,7 @@ class Translator extends OriginalTranslator implements ResetInterface
         $this->version = $version->get();
     }
 
-    public function warmUp(string $cacheDir): array
+    public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         $this->warmUp = true;
         try {

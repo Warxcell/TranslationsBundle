@@ -1,35 +1,41 @@
 framework:
-    test: ~
-    default_locale: 'bg'
-    translator:
-        default_path: '%kernel.project_dir%/translations'
-        fallbacks:
-            - 'en'
-            - 'nl'
+  test: ~
+  default_locale: 'bg'
+  translator:
+    default_path: '%kernel.project_dir%/translations'
+    fallbacks:
+      - 'en'
+      - 'nl'
+  cache:
+    default_redis_provider: 'cache.adapter.array'
+    pools:
+      cache_flag:
+        adapter: cache.adapter.array
 
 doctrine:
-    dbal:
-        driver: pdo_sqlite
-        memory: true
-        charset: UTF8
-    orm:
-        auto_generate_proxy_classes: "%kernel.debug%"
-        naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
-        mappings:
-            ArxyTranslationsBundleTests:
-                type: annotation
-                dir: '%kernel.project_dir%/Entity'
-                is_bundle: false
-                prefix: Arxy\TranslationsBundle\Tests\Integration\Entity
+  dbal:
+    driver: pdo_sqlite
+    memory: true
+    charset: UTF8
+  orm:
+    auto_generate_proxy_classes: "%kernel.debug%"
+    naming_strategy: doctrine.orm.naming_strategy.underscore
+    auto_mapping: true
+    mappings:
+      ArxyTranslationsBundleTests:
+        type: attribute
+        dir: '%kernel.project_dir%/Entity'
+        is_bundle: false
+        prefix: Arxy\TranslationsBundle\Tests\Integration\Entity
 
 arxy_translations:
-    repository: Arxy\TranslationsBundle\Tests\Integration\Repository\TranslationRepository
+  repository: Arxy\TranslationsBundle\Tests\Integration\Repository\TranslationRepository
+  cache_flag: 'cache_flag'
 
 services:
-    # default configuration for services in *this* file
-    _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    Arxy\TranslationsBundle\Tests\Integration\Repository\TranslationRepository: ~
+  Arxy\TranslationsBundle\Tests\Integration\Repository\TranslationRepository: ~
