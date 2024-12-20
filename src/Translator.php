@@ -13,6 +13,11 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class Translator extends OriginalTranslator implements ResetInterface
 {
+    /**
+     * @var MessageCatalogueInterface[]
+     */
+    private array $originalCatalogues = [];
+
     private Repository|null $repository = null;
 
     private CacheFlag|null $cacheFlag = null;
@@ -45,6 +50,7 @@ class Translator extends OriginalTranslator implements ResetInterface
             return;
         }
 
+        $this->originalCatalogues[$locale] = clone $this->catalogues[$locale];
         $this->fetchTranslations($locale);
     }
 
@@ -84,7 +90,9 @@ class Translator extends OriginalTranslator implements ResetInterface
             return;
         }
 
-        foreach ($this->catalogues as $locale => $catalogue) {
+        foreach (array_keys($this->catalogues) as $locale) {
+            $catalogue = $this->catalogues[$locale] = clone $this->originalCatalogues[$locale];
+
             $translations = $this->repository->findByLocale($locale);
             foreach ($translations as $translation) {
                 $catalogue->set(

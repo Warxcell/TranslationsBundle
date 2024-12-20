@@ -177,6 +177,46 @@ class TranslatorTest extends KernelTestCase
         self::assertSame('Hello, world! Edited', $translator->trans('hello_world', locale: 'en'));
     }
 
+    public function testDeletedTranslation(): void
+    {
+        $kernel = self::bootKernel();
+        $this->buildDb($kernel);
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+
+        $bg = new Language('bg');
+        $entityManager->persist($bg);
+
+        $en = new Language('en');
+        $entityManager->persist($en);
+
+        $helloWorldInBg = new Translation($bg, new Token('hello_world', 'messages'), 'Здравей, свят!');
+        $helloWorldInEn = new Translation($en, new Token('hello_world', 'messages'), 'Hello, world!');
+        $entityManager->persist($helloWorldInBg);
+        $entityManager->persist($helloWorldInEn);
+        $entityManager->flush();
+
+        /** @var TranslatorInterface $translator */
+        $translator = static::getContainer()->get(TranslatorInterface::class);
+
+        self::assertSame('Здравей, свят!', $translator->trans('hello_world', locale: 'bg'));
+
+        $entityManager->remove($helloWorldInBg);
+        $entityManager->flush();
+
+        /** @var CacheFlag $cacheFlag */
+        $cacheFlag = static::getContainer()->get(CacheFlag::class);
+        $cacheFlag->increment($cacheFlag->getVersion());
+
+        if ($translator instanceof ResetInterface) {
+            $translator->reset();
+        }
+
+        // deleted BG trans should fallback to EN
+        self::assertSame('Hello, world!', $translator->trans('hello_world', locale: 'bg'));
+    }
+
     /**
      * When Symfony clear cache, tables might not be created, no exception should be thrown in that case.
      */
