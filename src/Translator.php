@@ -91,7 +91,7 @@ class Translator extends OriginalTranslator implements ResetInterface
         }
 
         foreach (array_keys($this->catalogues) as $locale) {
-            $catalogue = $this->catalogues[$locale] = clone $this->originalCatalogues[$locale];
+            $catalogue = $this->catalogues[$locale] = clone($this->originalCatalogues[$locale] ?? $this->catalogues[$locale]);
 
             $translations = $this->repository->findByLocale($locale);
             foreach ($translations as $translation) {
