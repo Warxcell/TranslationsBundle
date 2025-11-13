@@ -27,10 +27,7 @@ class Token
     /**
      * @var Collection<Translation>
      */
-    #[ORM\OneToMany(mappedBy: 'token', targetEntity: 'Translation', cascade: [
-        'PERSIST',
-        'REMOVE',
-    ], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'token', targetEntity: 'Translation', orphanRemoval: true)]
     private Collection $translations;
 
     public function __construct(string $token, string $catalogue)

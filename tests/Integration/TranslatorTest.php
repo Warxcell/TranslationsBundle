@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -102,17 +103,35 @@ class TranslatorTest extends KernelTestCase
         $nl = new Language('nl');
         $entityManager->persist($nl);
 
-        $entityManager->persist(new Translation($bg, new Token('hello_world', 'messages'), 'Здравей, свят!'));
+        $helloWorld = new Token('hello_world', 'messages');
+        $entityManager->persist($helloWorld);
+        $entityManager->persist(new Translation($bg, $helloWorld, 'Здравей, свят!'));
+
+        $secondFallback = new Token('second_fallback', 'messages');
+        $entityManager->persist($secondFallback);
         $entityManager->persist(
-            new Translation($nl, new Token('second_fallback', 'messages'), 'This message is in NL')
+            new Translation($nl, $secondFallback, 'This message is in NL')
         );
-        $entityManager->persist(new Translation($en, new Token('how_is_it', 'messages'), 'How is it?'));
-        $entityManager->persist(new Translation($en, new Token('hello_user', 'messages'), 'Hello, %name%'));
-        $entityManager->persist(new Translation($en, new Token('wrong_user', 'validators'), 'User %user% is wrong!'));
+
+        $howIsIt = new Token('how_is_it', 'messages');
+        $entityManager->persist($howIsIt);
+        $entityManager->persist(new Translation($en, $howIsIt, 'How is it?'));
+
+        $helloUser = new Token('hello_user', 'messages');
+        $entityManager->persist($helloUser);
+        $entityManager->persist(new Translation($en, $helloUser, 'Hello, %name%'));
+
+        $wrongUser = new Token('wrong_user', 'validators');
+        $entityManager->persist($wrongUser);
+        $entityManager->persist(new Translation($en, $wrongUser, 'User %user% is wrong!'));
+
+
+        $hasApples = new Token('has_apples', 'messages');
+        $entityManager->persist($hasApples);
         $entityManager->persist(
             new Translation(
                 $en,
-                new Token('has_apples', 'messages'),
+                $hasApples,
                 '{0}%name% has no apples!|{1}%name% has one apple!|]1,Inf[ %name% has %count% apples!'
             )
         );
@@ -138,8 +157,10 @@ class TranslatorTest extends KernelTestCase
         $en = new Language('en');
         $entityManager->persist($en);
 
-        $helloWorldInBg = new Translation($bg, new Token('hello_world', 'messages'), 'Здравей, свят!');
-        $helloWorldInEn = new Translation($en, new Token('hello_world', 'messages'), 'Hello, world!');
+        $token = new Token('hello_world', 'messages');
+        $entityManager->persist($token);
+        $helloWorldInBg = new Translation($bg, $token, 'Здравей, свят!');
+        $helloWorldInEn = new Translation($en, $token, 'Hello, world!');
         $entityManager->persist($helloWorldInBg);
         $entityManager->persist($helloWorldInEn);
         $entityManager->flush();
@@ -191,8 +212,10 @@ class TranslatorTest extends KernelTestCase
         $en = new Language('en');
         $entityManager->persist($en);
 
-        $helloWorldInBg = new Translation($bg, new Token('hello_world', 'messages'), 'Здравей, свят!');
-        $helloWorldInEn = new Translation($en, new Token('hello_world', 'messages'), 'Hello, world!');
+        $token = new Token('hello_world', 'messages');
+        $entityManager->persist($token);
+        $helloWorldInBg = new Translation($bg, $token, 'Здравей, свят!');
+        $helloWorldInEn = new Translation($en, $token, 'Hello, world!');
         $entityManager->persist($helloWorldInBg);
         $entityManager->persist($helloWorldInEn);
         $entityManager->flush();
@@ -215,6 +238,68 @@ class TranslatorTest extends KernelTestCase
 
         // deleted BG trans should fallback to EN
         self::assertSame('Hello, world!', $translator->trans('hello_world', locale: 'bg'));
+    }
+
+    public function testCatalogues(): void
+    {
+        $kernel = self::bootKernel();
+        $this->buildDb($kernel);
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+
+        $en = new Language('en');
+        $entityManager->persist($en);
+
+        $enGB = new Language('en-gb');
+        $entityManager->persist($enGB);
+
+        $token = new Token('hello_world', 'messages');
+        $entityManager->persist($token);
+        $helloWorldInEn = new Translation($en, $token, 'Hello, world!');
+        $entityManager->persist($helloWorldInEn);
+        $entityManager->flush();
+
+
+        $translator = static::getContainer()->get(TranslatorInterface::class);
+
+        if (!$translator instanceof TranslatorBagInterface) {
+            throw new \LogicException();
+        }
+
+        $catalogue = $translator->getCatalogue('en-gb');
+
+        $translations = [];
+
+        do {
+            $translations += $catalogue->all('messages');
+        } while ($catalogue = $catalogue->getFallbackCatalogue());
+
+        self::assertEquals('Hello, world!', $translations['hello_world']);
+
+
+        $helloWorldInEn->setTranslation('Hello, world! EDITED');
+        $entityManager->persist($helloWorldInEn);
+        $entityManager->flush();
+
+
+        /** @var CacheFlag $cacheFlag */
+        $cacheFlag = static::getContainer()->get(CacheFlag::class);
+        $cacheFlag->increment($cacheFlag->getVersion());
+
+        if ($translator instanceof ResetInterface) {
+            $translator->reset();
+        }
+
+        $catalogue = $translator->getCatalogue('en-gb');
+
+        $translations = [];
+
+        do {
+            $translations += $catalogue->all('messages');
+        } while ($catalogue = $catalogue->getFallbackCatalogue());
+
+        self::assertEquals('Hello, world! EDITED', $translations['hello_world']);
     }
 
     /**
