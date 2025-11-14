@@ -90,7 +90,7 @@ class Translator extends OriginalTranslator implements ResetInterface
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
-        $this->warmUp = true;
+        $this->warmUp = $buildDir !== null;
         try {
             return parent::warmUp($cacheDir);
         } finally {
