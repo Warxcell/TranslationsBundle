@@ -20,6 +20,8 @@ class Translator extends OriginalTranslator implements ResetInterface
     private int $version = 0;
     private bool $warmUp = false;
 
+    private ?array $translations = null;
+
     /**
      * @required
      */
@@ -40,41 +42,35 @@ class Translator extends OriginalTranslator implements ResetInterface
     {
         parent::loadCatalogue($locale);
 
+        $this->fetchAndMergeTranslations($this->catalogues[$locale]);
+    }
+
+    private function fetchAndMergeTranslations(MessageCatalogueInterface $catalogue): void
+    {
         if ($this->warmUp) {
             // do not load translations from database during warmup.
             return;
         }
 
-        $this->fetchTranslations($locale);
-    }
-
-    private function fetchTranslations(string $locale): void
-    {
-        $translations = $this->repository?->findByLocale($locale) ?? [];
-        $catalogue = $this->catalogues[$locale];
-        foreach ($translations as $translation) {
-            $catalogue->set(
-                $translation->getToken(),
-                $translation->getTranslation(),
-                $translation->getCatalogue()
-            );
-        }
-        $this->loadFallbackTranslations($catalogue);
-    }
-
-    private function loadFallbackTranslations(MessageCatalogueInterface $catalogue): void
-    {
-        while (($catalogue = $catalogue->getFallbackCatalogue()) !== null) {
-            $translations = $this->repository->findByLocale($catalogue->getLocale());
-
-            foreach ($translations as $translation) {
-                $catalogue->set(
-                    $translation->getToken(),
-                    $translation->getTranslation(),
-                    $translation->getCatalogue()
-                );
+        if ($this->translations === null) {
+            $this->translations = [];
+            foreach ($this->repository?->fetchTranslations() ?? [] as $translation) {
+                $this->translations[$translation->getLocale()][$translation->getCatalogue()][$translation->getToken(
+                )] = $translation->getTranslation();
             }
         }
+
+        do {
+            $translations = $this->translations[$catalogue->getLocale()] ?? [];
+
+            foreach ($translations as $domain => $messages) {
+                foreach ($messages as $token => $translation) {
+                    $catalogue->set($token, $translation, $domain);
+                }
+            }
+
+            $catalogue = $catalogue->getFallbackCatalogue();
+        } while ($catalogue !== null);
     }
 
     public function reset(): void
@@ -85,12 +81,13 @@ class Translator extends OriginalTranslator implements ResetInterface
         }
 
         $this->catalogues = [];
+        $this->translations = null;
         $this->version = $version->get();
     }
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
-        $this->warmUp = true;
+        $this->warmUp = $buildDir !== null;
         try {
             return parent::warmUp($cacheDir);
         } finally {

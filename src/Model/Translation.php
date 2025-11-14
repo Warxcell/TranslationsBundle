@@ -11,4 +11,6 @@ interface Translation
     public function getToken(): string;
 
     public function getCatalogue(): string;
+
+    public function getLocale(): string;
 }

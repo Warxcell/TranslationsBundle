@@ -9,15 +9,12 @@ namespace Arxy\TranslationsBundle\Model;
  */
 final readonly class TranslationModel implements Translation
 {
-    private string $translation;
-    private string $token;
-    private string $catalogue;
-
-    public function __construct(string $translation, string $token, string $catalogue)
-    {
-        $this->translation = $translation;
-        $this->token = $token;
-        $this->catalogue = $catalogue;
+    public function __construct(
+        private string $translation,
+        private string $token,
+        private string $catalogue,
+        private string $locale,
+    ) {
     }
 
     public function getTranslation(): string
@@ -33,5 +30,10 @@ final readonly class TranslationModel implements Translation
     public function getCatalogue(): string
     {
         return $this->catalogue;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
     }
 }
