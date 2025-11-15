@@ -24,10 +24,25 @@ class TranslationRepository extends ServiceEntityRepository implements Repositor
         parent::__construct($registry, Translation::class);
     }
 
+    public function fetchTranslations(): iterable
+    {
+        $qb = $this->createQueryBuilder('translation');
+        $qb->select(
+            'NEW '.TranslationModel::class.'(translation.translation, token.token, token.catalogue, language.locale)'
+        );
+        $qb->join('translation.token', 'token');
+        $qb->join('translation.language', 'language');
+        $query = $qb->getQuery();
+
+        return $query->toIterable();
+    }
+
     public function findByLocale(string $locale): iterable
     {
         $qb = $this->createQueryBuilder('translation');
-        $qb->select('NEW ' . TranslationModel::class . '(translation.translation, token.token, token.catalogue)');
+        $qb->select(
+            'NEW '.TranslationModel::class.'(translation.translation, token.token, token.catalogue, language.locale)'
+        );
         $qb->join('translation.token', 'token');
         $qb->join('translation.language', 'language');
         $qb->andWhere('language.locale = :locale')->setParameter('locale', $locale);

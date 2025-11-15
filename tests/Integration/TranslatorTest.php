@@ -17,6 +17,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use function sprintf;
 
 class TranslatorTest extends KernelTestCase
 {
@@ -179,9 +180,11 @@ class TranslatorTest extends KernelTestCase
         $entityManager->persist($helloWorldInEn);
         $entityManager->flush();
 
-        if ($translator instanceof ResetInterface) {
-            $translator->reset();
+        if (!$translator instanceof ResetInterface) {
+            throw new \LogicException();
         }
+        $translator->reset();
+
 
         self::assertSame('Здравей, свят!', $translator->trans('hello_world', locale: 'bg'));
         self::assertSame('Hello, world!', $translator->trans('hello_world', locale: 'en'));
@@ -190,9 +193,7 @@ class TranslatorTest extends KernelTestCase
         $cacheFlag = static::getContainer()->get(CacheFlag::class);
         $cacheFlag->increment($cacheFlag->getVersion());
 
-        if ($translator instanceof ResetInterface) {
-            $translator->reset();
-        }
+        $translator->reset();
 
         self::assertSame('Здравей, свят! редактирано', $translator->trans('hello_world', locale: 'bg'));
         self::assertSame('Hello, world! Edited', $translator->trans('hello_world', locale: 'en'));
@@ -232,9 +233,12 @@ class TranslatorTest extends KernelTestCase
         $cacheFlag = static::getContainer()->get(CacheFlag::class);
         $cacheFlag->increment($cacheFlag->getVersion());
 
-        if ($translator instanceof ResetInterface) {
-            $translator->reset();
+        if (!$translator instanceof ResetInterface) {
+            throw new \LogicException(
+                sprintf('"%s" should not implement "%s"', $translator::class, ResetInterface::class)
+            );
         }
+        $translator->reset();
 
         // deleted BG trans should fallback to EN
         self::assertSame('Hello, world!', $translator->trans('hello_world', locale: 'bg'));
@@ -287,9 +291,10 @@ class TranslatorTest extends KernelTestCase
         $cacheFlag = static::getContainer()->get(CacheFlag::class);
         $cacheFlag->increment($cacheFlag->getVersion());
 
-        if ($translator instanceof ResetInterface) {
-            $translator->reset();
+        if (!$translator instanceof ResetInterface) {
+            throw new \LogicException();
         }
+        $translator->reset();
 
         $catalogue = $translator->getCatalogue('en-gb');
 
