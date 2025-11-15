@@ -47,17 +47,19 @@ class Translator extends OriginalTranslator implements ResetInterface
 
     private function fetchAndMergeTranslations(MessageCatalogueInterface $catalogue): void
     {
-        if ($this->warmUp) {
-            // do not load translations from database during warmup.
-            return;
-        }
-
         if ($this->translations === null) {
+            if ($this->warmUp) {
+                // do not load translations from database during warmup.
+                return;
+            }
+
             $this->translations = [];
             foreach ($this->repository?->fetchTranslations() ?? [] as $translation) {
                 $this->translations[$translation->getLocale()][$translation->getCatalogue()][$translation->getToken(
                 )] = $translation->getTranslation();
             }
+
+            $this->version = $this->cacheFlag?->getVersion()?->get() ?? 0;
         }
 
         do {
@@ -82,7 +84,6 @@ class Translator extends OriginalTranslator implements ResetInterface
 
         $this->catalogues = [];
         $this->translations = null;
-        $this->version = $version->get();
     }
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
