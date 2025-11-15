@@ -25,9 +25,6 @@ class Translator extends OriginalTranslator implements ResetInterface
 
     private ?array $translations = null;
 
-    /**
-     * @var WeakMap<MessageCatalogueInterface, true>
-     */
     private WeakMap $fixedCatalogues;
 
     public function __construct(
@@ -58,14 +55,13 @@ class Translator extends OriginalTranslator implements ResetInterface
         $this->cacheFlag = $cacheFlag;
     }
 
-    protected function loadCatalogue(string $locale): void
+    public function getCatalogue(?string $locale = null): MessageCatalogueInterface
     {
-        parent::loadCatalogue($locale);
+        $catalogue = parent::getCatalogue($locale);
 
-        // fucking symfony can load multiple catalogues, so we need to cycle them all
-        foreach ($this->catalogues as $catalogue) {
-            $this->fetchAndMergeTranslations($catalogue);
-        }
+        $this->fetchAndMergeTranslations($catalogue);
+
+        return $catalogue;
     }
 
     private function fetchAndMergeTranslations(MessageCatalogueInterface $catalogue): void
@@ -73,7 +69,6 @@ class Translator extends OriginalTranslator implements ResetInterface
         if ($this->fixedCatalogues->offsetExists($catalogue)) {
             return;
         }
-
         if ($this->translations === null) {
             if ($this->warmUp) {
                 // do not load translations from database during warmup.
@@ -98,7 +93,7 @@ class Translator extends OriginalTranslator implements ResetInterface
                 }
             }
 
-            $this->fixedCatalogues[$catalogue] = true;
+            $this->fixedCatalogues->offsetSet($catalogue, true);
 
             $catalogue = $catalogue->getFallbackCatalogue();
         } while ($catalogue !== null);
@@ -113,7 +108,6 @@ class Translator extends OriginalTranslator implements ResetInterface
 
         $this->catalogues = [];
         $this->translations = null;
-        $this->fixedCatalogues = new WeakMap();
     }
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
