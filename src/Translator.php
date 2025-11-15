@@ -113,6 +113,7 @@ class Translator extends OriginalTranslator implements ResetInterface
 
         $this->catalogues = [];
         $this->translations = null;
+        $this->fixedCatalogues = new WeakMap();
     }
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
