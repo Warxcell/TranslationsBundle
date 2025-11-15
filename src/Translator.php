@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Arxy\TranslationsBundle;
 
+use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator as OriginalTranslator;
+use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Contracts\Service\ResetInterface;
+use WeakMap;
 
 /**
  * @internal
@@ -21,6 +24,23 @@ class Translator extends OriginalTranslator implements ResetInterface
     private bool $warmUp = false;
 
     private ?array $translations = null;
+
+    /**
+     * @var WeakMap<MessageCatalogueInterface, true>
+     */
+    private WeakMap $fixedCatalogues;
+
+    public function __construct(
+        ContainerInterface $container,
+        MessageFormatterInterface $formatter,
+        string $defaultLocale,
+        array $loaderIds = [],
+        array $options = [],
+        array $enabledLocales = []
+    ) {
+        parent::__construct($container, $formatter, $defaultLocale, $loaderIds, $options, $enabledLocales);
+        $this->fixedCatalogues = new WeakMap();
+    }
 
     /**
      * @required
@@ -42,11 +62,18 @@ class Translator extends OriginalTranslator implements ResetInterface
     {
         parent::loadCatalogue($locale);
 
-        $this->fetchAndMergeTranslations($this->catalogues[$locale]);
+        // fucking symfony can load multiple catalogues, so we need to cycle them all
+        foreach ($this->catalogues as $catalogue) {
+            $this->fetchAndMergeTranslations($catalogue);
+        }
     }
 
     private function fetchAndMergeTranslations(MessageCatalogueInterface $catalogue): void
     {
+        if ($this->fixedCatalogues->offsetExists($catalogue)) {
+            return;
+        }
+
         if ($this->translations === null) {
             if ($this->warmUp) {
                 // do not load translations from database during warmup.
@@ -70,6 +97,8 @@ class Translator extends OriginalTranslator implements ResetInterface
                     $catalogue->set($token, $translation, $domain);
                 }
             }
+
+            $this->fixedCatalogues[$catalogue] = true;
 
             $catalogue = $catalogue->getFallbackCatalogue();
         } while ($catalogue !== null);
