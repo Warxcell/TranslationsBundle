@@ -10,9 +10,6 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 interface Repository
 {
     /** @return Translation[] */
-    public function findByLocale(string $locale): iterable;
-
-    /** @return Translation[] */
     public function fetchTranslations(): iterable;
 
     public function persistCatalogue(MessageCatalogueInterface $catalogue): void;
