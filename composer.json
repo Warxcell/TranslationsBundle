@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": "^8.2",
-        "doctrine/orm": "~2.5",
+        "doctrine/orm": "*",
         "symfony/framework-bundle": "*",
         "symfony/translation-contracts": "*",
         "symfony/translation": "*"

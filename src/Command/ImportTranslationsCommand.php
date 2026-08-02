@@ -7,6 +7,7 @@ namespace Arxy\TranslationsBundle\Command;
 use Arxy\TranslationsBundle\Model\Language;
 use Arxy\TranslationsBundle\Repository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -17,24 +18,15 @@ use Throwable;
 
 use function sprintf;
 
+#[AsCommand('arxy:translations:import-translations', 'Import translations into database')]
 class ImportTranslationsCommand extends Command
 {
-    protected static $defaultName = 'arxy:translations:import-translations';
-    protected static $defaultDescription = 'Import translations into database';
-
-    private Repository $repository;
-    private TranslatorBagInterface $translatorBag;
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        Repository $repository,
-        TranslatorBagInterface $translatorBag,
-        EntityManagerInterface $entityManager
+        private readonly Repository $repository,
+        private readonly TranslatorBagInterface $translatorBag,
+        private readonly EntityManagerInterface $entityManager
     ) {
         parent::__construct();
-        $this->repository = $repository;
-        $this->translatorBag = $translatorBag;
-        $this->entityManager = $entityManager;
     }
 
     protected function configure(): void
